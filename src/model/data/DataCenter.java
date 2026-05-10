@@ -29,4 +29,6 @@ public class DataCenter {
             return instance;
         }
     }
+
+    public static void testMethod(){}
 }

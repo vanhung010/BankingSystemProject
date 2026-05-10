@@ -1,7 +1,12 @@
 package model.entity;
 
+import java.util.List;
+
 public class Customer extends User {
     private double monthlyIncome;
+
+    private List<Account> accountList;
+    private List<LoanRequest> loanRequestList;
 
     public double getMonthlyIncome() {
         return monthlyIncome;

@@ -34,3 +34,16 @@ bin/
 out/
 
 BankingSystemProject.iml
+### Eclipse ###
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~
+.settings/
+.classpath
+.project
+.factorypath
+*.launch

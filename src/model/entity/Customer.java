@@ -16,5 +16,11 @@ public class Customer extends User {
         this.monthlyIncome = monthlyIncome;
     }
 
+    public List<Account> getAccountList() {
+        return accountList;
+    }
 
+    public void setAccountList(List<Account> accountList) {
+        this.accountList = accountList;
+    }
 }

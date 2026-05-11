@@ -1,0 +1,9 @@
+SystemDate:2026-05-11
+BankName:MyBank
+minCheckingBalance:50000.0
+demandInterestRate:0.1
+interestRate1M:4.5
+interestRate6M:5.5
+interestRate12M:6.5
+baseLoanInterestRate:8.0
+minSavingDeposit:1000000.0

@@ -23,11 +23,29 @@ public class DataCenter {
     }
     public static DataCenter getInstance(){
         if(instance == null){
-            return new DataCenter();
+            instance = new DataCenter();
         }
-        else {
-            return instance;
-        }
+        return instance;
+    }
+
+    public List<Account> getAccountList() {
+        return accountList;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public List<LoanRequest> getLoanRequestList() {
+        return loanRequestList;
+    }
+
+    public List<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public BankingSystem getBankingSystem() {
+        return bankingSystem;
     }
 
     public static void testMethod(){}

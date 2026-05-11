@@ -13,7 +13,7 @@ public class LoginView {
 
     public void display() {
         while (true) {
-            System.out.println("\n=== HLK BANK ===");
+            System.out.println("\n===BANK ===");
             System.out.println("1. Đăng nhập");
             System.out.println("2. Đăng ký");
             System.out.println("0. Thoát");
@@ -22,14 +22,7 @@ public class LoginView {
 
             switch (choice) {
                 case "1":
-                    User user = handleLogin();
-                    if (user != null) {
-                        if (user instanceof Customer) {
-                            new CustomerView((Customer) user).run();
-                        } else if (user instanceof Staff) {
-                            new StaffView((Staff) user).run();
-                        }
-                    }
+                  promptLogin();
                     break;
                 case "2":
 //                    handleRegister();
@@ -43,21 +36,15 @@ public class LoginView {
         }
     }
 
-    private User handleLogin() {
+
+    private void promptLogin() {
         System.out.print("Nhập Username: ");
         String username = scanner.nextLine();
         System.out.print("Nhập Password: ");
         String password = scanner.nextLine();
 
-        User user = loginController.login(username, password);
 
-        if (user != null) {
-            System.out.println("Đăng nhập thành công! Xin chào, " + user.getFullName());
-            return user;
-        } else {
-            System.out.println("Tên đăng nhập hoặc mật khẩu không đúng.");
-            return null;
-        }
+        loginController.handleLogin(username, password);
     }
 
 }

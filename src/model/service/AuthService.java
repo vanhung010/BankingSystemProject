@@ -11,7 +11,7 @@ public class AuthService {
     }
 
     public User login(String username, String password) {
-        // Thực hiện các logic xác thực, kiểm tra chuỗi rỗng...
+
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             return null;
         }

@@ -11,4 +11,52 @@ public class LoanRequest {
     private LoanRequestStatus status;
     private LocalDateTime requestDate;
     private int loanTerm;
+
+    public int getLoanRequestId() {
+        return loanRequestId;
+    }
+
+    public void setLoanRequestId(int loanRequestId) {
+        this.loanRequestId = loanRequestId;
+    }
+
+    public Customer getCustomerOwner() {
+        return customerOwner;
+    }
+
+    public void setCustomerOwner(Customer customerOwner) {
+        this.customerOwner = customerOwner;
+    }
+
+    public double getRequestAmount() {
+        return requestAmount;
+    }
+
+    public void setRequestAmount(double requestAmount) {
+        this.requestAmount = requestAmount;
+    }
+
+    public LoanRequestStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(LoanRequestStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(LocalDateTime requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public int getLoanTerm() {
+        return loanTerm;
+    }
+
+    public void setLoanTerm(int loanTerm) {
+        this.loanTerm = loanTerm;
+    }
 }

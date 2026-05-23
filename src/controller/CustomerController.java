@@ -13,15 +13,11 @@ public class CustomerController {
         this.scanner = new Scanner(System.in);
     }
 
-    /**
-     * Hàm điều khiển chức năng mở tài khoản giao dịch
-     * @param customer Khách hàng hiện tại đang đăng nhập hệ thống
-     */
     public void handleOpenCheckingAccount(Customer customer) {
-        System.out.println("\n========= MỞ TÀI KHOẢN GIAO DỊCH =========");
+        System.out.println("MỞ TÀI KHOẢN GIAO DỊCH");
 
         // 1. Nhập mã tài khoản mới
-        System.out.print("Nhập mã số tài khoản mới (số nguyên): ");
+        System.out.print("Nhập mã số tài khoản mới: ");
         int accountId = scanner.nextInt();
 
         // 2. Nhập số tiền gửi ban đầu
@@ -31,15 +27,15 @@ public class CustomerController {
         System.out.println("------------------------------------------");
         System.out.println("Đang xử lý yêu cầu mở tài khoản...");
 
-        // 3. Gọi sang tầng Service để kiểm tra logic và lưu trữ
+        // 3. kiểm tra logic và lưu trữ
         boolean isSuccess = accountService.openCheckingAccount(accountId, customer, initialBalance);
 
-        // 4. Thông báo kết quả phản hồi giao diện
+        // 4. Thông báo kết quả phản hồi
         if (isSuccess) {
             System.out.println("Hệ thống thông báo: Hoàn tất quy trình mở tài khoản.");
         } else {
             System.out.println("Hệ thống thông báo: Vui lòng thử lại với thông tin hợp lệ.");
         }
-        System.out.println("==========================================\n");
+
     }
 }

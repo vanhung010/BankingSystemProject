@@ -10,14 +10,14 @@ public class AccountFactory {
     public static Account createCheckingAccount(int accountId, Customer owner, double initialBalance) {
         CheckingAccount account = new CheckingAccount();
 
-        // Gắn dữ liệu cho class cha (Account)
+        // Gắn dữ liệu cho class Account
         account.setAccountId(accountId);
         account.setOwner(owner);
         account.setBalance(initialBalance);
         account.setCreatedAt(BankingSystem.getSystemDate()); // Lấy ngày hệ thống
         account.setTransactionList(new ArrayList<>());
 
-        // Gắn dữ liệu cho class con (CheckingAccount)
+        // Gắn dữ liệu cho class CheckingAccount
         account.setMinBalance(BankingSystem.getMinCheckingBalance());
 
         return account;

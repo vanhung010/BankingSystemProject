@@ -5,12 +5,21 @@ import model.entity.Customer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import controller.CustomerController;
 
 public class CustomerView {
     Customer customer;
     Scanner scanner = new Scanner(System.in);
+
+
+
+    // them cai nay
+    CustomerController customerController;
+
     public CustomerView(Customer customer) {
         this.customer = customer;
+// khoi tao
+        this.customerController = new CustomerController();
 
     }
     public void run() {
@@ -45,7 +54,7 @@ public class CustomerView {
 //                    checkAllAccount(customer.getUserId());
                     break;
                 case "2":
-//                    handleOpenCheckingAccount();
+                    customerController.handleOpenCheckingAccount(customer);
                     break;
                 case "3":
 //                    handleOpenSavingAccount();

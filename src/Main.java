@@ -6,6 +6,7 @@ import util.ReadFile;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+
         // Khởi chạy việc nạp dữ liệu từ file txt vào System DataCenter
         ReadFile.loadDataToDataCenter();
 
@@ -14,3 +15,5 @@ public class Main {
         new LoginView().display();
     }
 }
+
+

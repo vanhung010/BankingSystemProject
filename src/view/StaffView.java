@@ -1,15 +1,20 @@
 package view;
 
+import controller.StaffController;
+import model.entity.Customer;
+import model.entity.LoanRequest;
 import model.entity.Staff;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 
 public class StaffView {
 
     private Staff staff;
     Scanner scanner = new Scanner(System.in);
+    private StaffController staffController = new StaffController();
 
     public StaffView(Staff staff) {
 
@@ -57,7 +62,7 @@ public class StaffView {
 //                    handleCheckAllLoanRequestPending();
                     break;
                 case "4":
-//                    handleLoanRequest();
+                    handleLoanRequest();
                     break;
                 case "5":
 //                    displayBankSettings();
@@ -81,5 +86,67 @@ public class StaffView {
                     System.out.println("Lựa chọn không hợp lệ!");
             }
         }
+    }
+
+    public void handleLoanRequest(){
+        handleCheckAllLoanRequestPending(); //show danh sách những khoản vay đang chờ xét duyệt
+        System.out.println("Nhập id của khoản vay muốn xử lí");
+        String idLoanRequestString = scanner.nextLine();
+
+        LoanRequest loanRequest = staffController.getLoanRequestById(idLoanRequestString);
+
+        if(loanRequest == null){
+            System.out.println("Không tìm thấy khoản vay");
+            return;
+        }
+
+        System.out.println("1. Phê duyệt.");
+        System.out.println("2. Từ chối.");
+        String choice = scanner.nextLine();
+        if(choice.equals("1")){
+            Customer customer = staffController.getCustomerById(String.valueOf(loanRequest.getCustomerOwner().getUserId()));
+            CustomerView customerUI = new CustomerView(customer);
+            // using directly customerUI method is fine or we should have an option, but keep logic
+            customerUI.checkAllAccount(loanRequest.getCustomerOwner().getUserId());
+            System.out.println("Nhập id tài khoản thanh toán nhận tiền");
+            String idAccountString = scanner.nextLine();
+
+            staffController.approveLoanRequest(loanRequest, idAccountString);
+
+        }
+        else if(choice.equals("2")){
+            staffController.rejectLoanRequest(loanRequest);
+        }
+        else {
+            System.out.println("Vui lòng chọn đúng lựa chọn");
+            return;
+        }
+    }
+    public void handleCheckAllLoanRequestPending(){
+
+        try{
+            List<LoanRequest> loanRequestList = staffController.getAllLoanRequestPending();
+            System.out.println("\n===============================================================================");
+            System.out.println("                 DANH SÁCH YÊU CẦU VAY CHỜ DUYỆT (PENDING)");
+            System.out.println("===============================================================================");
+            System.out.printf("%-5s | %-10s | %-18s | %-12s | %-20s\n",
+                    "ID", "Mã Khách", "Số tiền vay (VNĐ)", "Kỳ hạn (Tháng)", "Ngày gửi yêu cầu");
+            System.out.println("-------------------------------------------------------------------------------");
+            for (LoanRequest req : loanRequestList) {
+                System.out.printf("%-5d | %-10d | %,18.0f | %-14d | %-20s\n",
+//                        req.getRequestId(),
+                        req.getLoanRequestId(),
+                        req.getCustomerOwner().getUserId(),
+                        req.getRequestAmount(),
+                        req.getLoanTerm(),
+                        req.getRequestDate().toString());
+            }
+            System.out.println("===============================================================================");
+        }
+        catch(RuntimeException e){
+            System.out.println(e.getMessage());
+            return;
+        }
+
     }
 }

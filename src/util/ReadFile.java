@@ -97,8 +97,15 @@ public class ReadFile {
                 account.setAccountId(Integer.parseInt(parts[1]));
                 account.setBalance(Double.parseDouble(parts[2]));
                 account.setAccountStatus(AccountStatus.valueOf(parts[3]));
+                Customer owner = findCustomerById(Integer.parseInt(parts[4]));
+                account.setOwner(owner);
                 account.setCreatedAt(LocalDate.parse(parts[5]));
-                // Note: parts[4] is ownerId, handle mapping logic elsewhere or add transient ownerId field
+                if (owner != null) {
+                    if (owner.getAccountList() == null) {
+                        owner.setAccountList(new ArrayList<>());
+                    }
+                    owner.getAccountList().add(account);
+                }
                 DataCenter.getInstance().getAccountList().add(account);
             }
         }
@@ -170,5 +177,14 @@ public class ReadFile {
         }
 
         System.out.println("Data loaded successfully from files.");
+    }
+
+    private static Customer findCustomerById(int customerId) {
+        for (User user : DataCenter.getInstance().getUserList()) {
+            if (user instanceof Customer && user.getUserId() == customerId) {
+                return (Customer) user;
+            }
+        }
+        return null;
     }
 }

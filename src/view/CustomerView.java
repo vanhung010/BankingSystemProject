@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
-import controller.CustomerController;
+
 
 public class CustomerView {
     Customer customer;
@@ -16,10 +16,6 @@ public class CustomerView {
 
     Scanner scanner = new Scanner(System.in);
 
-
-
-    // them cai nay
-    CustomerController customerController;
 
     public CustomerView(Customer customer) {
         this.customer = customer;
@@ -51,6 +47,7 @@ public class CustomerView {
             System.out.println("9. Tất toán sổ tiết kiệm");
             System.out.println("10. Xem lịch sử giao dịch (Transaction History)");
             System.out.println("11. Tra cứu chi tiết thông tin tài khoản");
+            System.out.println("12. Thay đổi trạng thái tài khoản"); // thêm cái này
             System.out.println("0. Đăng xuất");
             System.out.println("---------------------------------------------------");
             System.out.println("Nhập lựa chọn của bạn: ");
@@ -63,7 +60,7 @@ public class CustomerView {
                     customerController.handleOpenCheckingAccount(customer);
                     break;
                 case "3":
-//                    handleOpenSavingAccount();
+                    customerController.handleOpenSavingAccount(customer);
                     break;
                 case "4":
                     handleLoanRequest();
@@ -81,13 +78,16 @@ public class CustomerView {
 //                    handlePaymentLoan();
                     break;
                 case "9":
-//                    handClosedSavingAccount();
+                    customerController.handleCloseSavingAccount(customer);
                     break;
                 case "10":
 //                    handleViewTransactionHistory();
                     break;
                 case "11":
 //                    handleViewAccountDetails();
+                    break;
+                case "12":
+                    customerController.handleChangeAccountStatus(customer); // Gọi hàm đổi trạng thái
                     break;
                 case "0":
                     System.out.println("Đã đăng xuất!");

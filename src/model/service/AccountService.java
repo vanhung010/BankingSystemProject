@@ -36,27 +36,25 @@ public class AccountService {
 
         System.out.println("Mở tài khoản giao dịch thành công, Số tài khoản là: " + accountId);
         return true;
-import model.data.AccountDao;
-import model.data.UserDao;
-import model.entity.Account;
-import model.entity.Customer;
-
-import java.util.List;
-
-public class AccountService {
-
-    private UserDao userDao = new UserDao();
-    private AccountDao accountDao = new AccountDao();
-
-    public Customer getCustomerbyId(int idCus){
-        Customer customer = userDao.getCustomerById(idCus);
-        if(customer == null){
-            throw new RuntimeException("Không tìm thấy khách hàng");
+    }
+    public boolean changeAccountStatus(Customer customer, int accountId, model.entity.enums.AccountStatus newStatus) {
+        if (customer.getAccountList() == null || customer.getAccountList().isEmpty()) {
+            System.out.println("=> Lỗi: Bạn chưa có tài khoản nào trong hệ thống.");
+            return false;
         }
-        return customer;
+
+        for (model.entity.Account acc : customer.getAccountList()) {
+            if (acc.getAccountId() == accountId) {
+                // Cập nhật trạng thái
+                acc.setAccountStatus(newStatus);
+                System.out.println("=> Thành công: Tài khoản [" + accountId + "] đã được chuyển sang trạng thái " + newStatus);
+                return true;
+            }
+        }
+
+        System.out.println("=> Lỗi: Không tìm thấy tài khoản [" + accountId + "] của bạn.");
+        return false;
     }
 
-    public List<Account> getAllAccount(int idCustomer) {
-        return accountDao.getAllAccountOfCustomerDao(idCustomer);
-    }
 }
+

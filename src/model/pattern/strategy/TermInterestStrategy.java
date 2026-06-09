@@ -1,0 +1,8 @@
+package model.pattern.strategy;
+
+public class TermInterestStrategy implements InterestStrategy{
+    @Override
+    public double calcInterest(double principal, double rate, int time) {
+        return 0;
+    }
+}

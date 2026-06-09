@@ -13,6 +13,25 @@ public class Transaction {
         private Integer accountId;
         private String description;
 
+        public Transaction(
+                TransactionType transactionType,
+                double amount,
+                LocalDateTime timestamp,
+                int accountId,
+                Object ignored,
+                String description
+        ) {
+                this.transactionType = transactionType;
+                this.amount = amount;
+                this.timestamp = timestamp;
+                this.accountId = accountId;
+                this.description = description;
+        }
+
+        public Transaction() {
+
+        }
+
         public int getTransactionId() {
                 return transactionId;
         }

@@ -12,7 +12,7 @@ public class CustomerView {
     Customer customer;
 
     CustomerController customerController = new CustomerController();
-
+    private StaffView staffView = new StaffView();
     Scanner scanner = new Scanner(System.in);
 
     public CustomerView(Customer customer) {
@@ -22,13 +22,13 @@ public class CustomerView {
 
     public void run() {
         while (true) {
-//            LocalDate currentDate = customerController.getDateSystem();
+            LocalDate currentDate = customerController.getDateSystem();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//            String formattedDate = currentDate.format(formatter);
+            String formattedDate = currentDate.format(formatter);
 
             System.out.println("===================================================");
             System.out.printf("Xin chào, %s | Role: CUSTOMER %n", customer.getUserName());
-//            System.out.printf("Ngày hệ thống: %s %n", formattedDate);
+            System.out.printf("Ngày hệ thống: %s %n", formattedDate);
             System.out.println("===================================================");
             System.out.println("--- QUẢN LÝ TÀI KHOẢN ---");
             System.out.println("1. Xem thông tin tài khoản & Số dư");
@@ -49,7 +49,7 @@ public class CustomerView {
             String choice = scanner.nextLine();
             switch (choice) {
                 case "1":
-//                    checkAllAccount(customer.getUserId());
+                    getAllAccount(customer.getUserId());
                     break;
                 case "2":
 //                    handleOpenCheckingAccount();
@@ -90,35 +90,20 @@ public class CustomerView {
         }
     }
 
-    public void handleLoanRequest() {
-        System.out.println("Nhập số tiền muốn vay");
-        String amountString = scanner.nextLine();
-        System.out.println("Nhập kì hạn vay (1-6-12)");
-        String termLoan = scanner.nextLine();
-
-
-        // xử lí lỗi không đúng kì hạn vay
-        if (!termLoan.equals("1") && !termLoan.equals("6") && !termLoan.equals("12")) {
-            System.out.println("Lỗi: Kì hạn vay không đúng vui lòng nhập lại");
-            return;
-        }
-        String mess = customerController.addLoanRequest(customer, amountString, termLoan);
-        System.out.println(mess);
-    }
-
-    public void checkAllAccount(int idCustomer) {
+    public void getAllAccount(int userId) {
         System.out.println("\n=========================================================");
         System.out.println("               THÔNG TIN CÁ NHÂN & SỐ DƯ");
         System.out.println("=========================================================");
         System.out.println("👤 Khách hàng: " + customer.getFullName());
         System.out.println("📧 Email     : " + customer.getEmail());
-        System.out.println("Thu nhập     : " + customer.getMonthlyIncome());
+        System.out.println("Thu nhập     : "+customer.getMonthlyIncome());
 
         System.out.println("---------------------------------------------------------");
         System.out.println("💳 DANH SÁCH TÀI KHOẢN:");
 
 
         List<Account> accounts = customerController.getAllAccountOfCustomer(customer);
+
 
 
         if (accounts == null || accounts.isEmpty()) {
@@ -144,10 +129,30 @@ public class CustomerView {
         }
         System.out.println("=========================================================");
     }
+
     private String getAccountTypeName(Account account) {
         if (account instanceof CheckingAccount) return "Thanh toán";
         if (account instanceof SavingAccount) return "Tiết kiệm";
         if (account instanceof LoanAccount) return "Khoản vay";
         return "Chưa xác định";
     }
+
+    //Tạo khoản vay
+   public void handleLoanRequest(){
+       System.out.println("Nhập số tiền muốn vay");
+       String amountString = scanner.nextLine();
+       System.out.println("Nhập kì hạn vay (1-6-12)");
+       String termLoan = scanner.nextLine();
+
+       // xử lí lỗi không đúng kì hạn vay
+       if (!termLoan.equals("1") && !termLoan.equals("6") && !termLoan.equals("12")) {
+           System.out.println("Lỗi: Kì hạn vay không đúng vui lòng nhập lại");
+           return;
+       }
+       String mess = customerController.addLoanRequest(customer, amountString, termLoan);
+       System.out.println(mess);
+
+   }
+
+
 }

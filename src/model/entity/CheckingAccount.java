@@ -3,4 +3,8 @@ public class CheckingAccount extends Account {
     private double minBalance;
     public double getMinBalance() { return minBalance; }
     public void setMinBalance(double minBalance) { this.minBalance = minBalance; }
+
+    public void deposit(double amount) {
+        this.setBalance(this.getBalance() + amount);
+    }
 }

@@ -4,14 +4,18 @@ import model.entity.Account;
 import model.entity.Customer;
 import model.service.AccountService;
 import model.service.LoanService;
+import model.service.TimeService;
 import util.ParseNumber;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class CustomerController {
 
     private LoanService loanService = new LoanService();
     private AccountService accountService = new AccountService();
+    private TimeService timeService = new TimeService();
+
 
 
     public String addLoanRequest(Customer customer, String amountString, String termString) {
@@ -34,7 +38,12 @@ public class CustomerController {
         }
         return mess;
     }
+
     public List<Account> getAllAccountOfCustomer(Customer customer) {
         return accountService.getAllAccount(customer.getUserId());
+    }
+
+    public LocalDate getDateSystem() {
+        return timeService.getSystemDate();
     }
 }

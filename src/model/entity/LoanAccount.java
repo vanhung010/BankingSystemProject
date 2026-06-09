@@ -1,6 +1,7 @@
 package model.entity;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class LoanAccount extends Account{
 
@@ -66,5 +67,22 @@ public class LoanAccount extends Account{
 
     public void setMonthlyRequiredPayment(double monthlyRequiredPayment) {
         this.monthlyRequiredPayment = monthlyRequiredPayment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        LoanAccount that = (LoanAccount) o;
+        return Double.compare(pricipalAmount, that.pricipalAmount) == 0 && Double.compare(interestRate, that.interestRate) == 0 && loanTerm == that.loanTerm && Double.compare(amountPaidThisMonth, that.amountPaidThisMonth) == 0 && Double.compare(monthlyRequiredPayment, that.monthlyRequiredPayment) == 0 && Objects.equals(accountOwner, that.accountOwner) && Objects.equals(nextPaymentDate, that.nextPaymentDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountOwner, pricipalAmount, interestRate, nextPaymentDate, loanTerm, amountPaidThisMonth, monthlyRequiredPayment);
+    }
+
+    //kiểm tra trả đủ chưa
+    public boolean checkPaid(){
+        return this.amountPaidThisMonth >= this.monthlyRequiredPayment;
     }
 }

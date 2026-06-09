@@ -11,6 +11,9 @@ import model.entity.enums.Role;
 import model.entity.enums.AccountStatus;
 import model.entity.enums.TransactionType;
 import model.entity.enums.LoanRequestStatus;
+import model.pattern.strategy.DemandInterestStrategy;
+import model.pattern.strategy.LoanInterestStrategy;
+import model.pattern.strategy.TermInterestStrategy;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -32,6 +35,7 @@ public class ReadFile {
 
     public static void loadDataToDataCenter() {
         String basePath = "src/data/";
+        DataCenter dataCenter = DataCenter.getInstance();
 
         // 1. Read Users
         List<String> userLines = readLinesFromFile(basePath + "user.txt");
@@ -59,7 +63,7 @@ public class ReadFile {
                 user.setRole(Role.valueOf(parts[5]));
                 user.setEmail(parts[6]);
 
-                DataCenter.getInstance().getUserList().add(user);
+                dataCenter.getUserList().add(user);
             }
         }
 
@@ -68,12 +72,13 @@ public class ReadFile {
         for (String line : accountLines) {
             String[] parts = line.split(",");
             if (parts.length < 7) continue;
-            
+
             String accType = parts[0];
             Account account = null;
             if (accType.equals("CHECKING") && parts.length >= 8) {
                 CheckingAccount ca = new CheckingAccount();
                 ca.setMinBalance(Double.parseDouble(parts[7]));
+                ca.setInterestStrategy(new DemandInterestStrategy());
                 account = ca;
             } else if (accType.equals("SAVING") && parts.length >= 11) {
                 SavingAccount sa = new SavingAccount();
@@ -81,6 +86,7 @@ public class ReadFile {
                 sa.setDepositDate(LocalDate.parse(parts[8]));
                 sa.setMaturityDate(LocalDate.parse(parts[9]));
                 sa.setInterest(Double.parseDouble(parts[10]));
+                sa.setInterestStrategy(new TermInterestStrategy());
                 account = sa;
             } else if (accType.equals("LOAN") && parts.length >= 13) {
                 LoanAccount la = new LoanAccount();
@@ -90,23 +96,18 @@ public class ReadFile {
                 la.setLoanTerm(Integer.parseInt(parts[10]));
                 la.setAmountPaidThisMonth(Double.parseDouble(parts[11]));
                 la.setMonthlyRequiredPayment(Double.parseDouble(parts[12]));
+                la.setInterestStrategy(new LoanInterestStrategy());
                 account = la;
             }
-            
+
             if (account != null) {
                 account.setAccountId(Integer.parseInt(parts[1]));
                 account.setBalance(Double.parseDouble(parts[2]));
                 account.setAccountStatus(AccountStatus.valueOf(parts[3]));
-                Customer owner = findCustomerById(Integer.parseInt(parts[4]));
-                account.setOwner(owner);
+                account.setOwner(findCustomerById(Integer.parseInt(parts[4])));
                 account.setCreatedAt(LocalDate.parse(parts[5]));
-                if (owner != null) {
-                    if (owner.getAccountList() == null) {
-                        owner.setAccountList(new ArrayList<>());
-                    }
-                    owner.getAccountList().add(account);
-                }
-                DataCenter.getInstance().getAccountList().add(account);
+                dataCenter.getAccountList().add(account);
+                addAccountToCustomer(account);
             }
         }
 
@@ -122,7 +123,7 @@ public class ReadFile {
             tx.setTimestamp(LocalDateTime.parse(parts[3]));
             tx.setAccountId(Integer.parseInt(parts[4]));
             tx.setDescription(parts[5]);
-            DataCenter.getInstance().getTransactionList().add(tx);
+            dataCenter.getTransactionList().add(tx);
         }
 
         // 4. Read Loan Requests
@@ -132,51 +133,45 @@ public class ReadFile {
             if (parts.length < 6) continue;
             LoanRequest lr = new LoanRequest();
             lr.setLoanRequestId(Integer.parseInt(parts[0]));
+            lr.setCustomerOwner(findCustomerById(Integer.parseInt(parts[1])));
             lr.setRequestAmount(Double.parseDouble(parts[2]));
             lr.setStatus(LoanRequestStatus.valueOf(parts[3]));
             lr.setRequestDate(LocalDateTime.parse(parts[4]));
             lr.setLoanTerm(Integer.parseInt(parts[5]));
-            DataCenter.getInstance().getLoanRequestList().add(lr);
+            dataCenter.getLoanRequestList().add(lr);
         }
 
         // 5. Read System Data
-        List<String> sysLines = readLinesFromFile(basePath + "system.txt");
-        for (String line : sysLines) {
-            String[] parts = line.split(":");
+        List<String> systemLines = readLinesFromFile(basePath + "system.txt");
+        BankingSystem bankingSystem = dataCenter.getBankingSystem();
+        bankingSystem.setSystemDate(LocalDate.now());
+        for (String line : systemLines) {
+            String[] parts = line.split(":", 2);
             if (parts.length < 2) continue;
 
             String key = parts[0];
             String value = parts[1];
 
-            switch (key) {
-                case "SystemDate":
-                    BankingSystem.setSystemDate(LocalDate.parse(value));
-                    break;
-                case "minCheckingBalance":
-                    BankingSystem.setMinCheckingBalance(Double.parseDouble(value));
-                    break;
-                case "demandInterestRate":
-                    BankingSystem.setDemandInterestRate(Double.parseDouble(value));
-                    break;
-                case "interestRate1M":
-                    BankingSystem.setInterestRate1M(Double.parseDouble(value));
-                    break;
-                case "interestRate6M":
-                    BankingSystem.setInterestRate6M(Double.parseDouble(value));
-                    break;
-                case "interestRate12M":
-                    BankingSystem.setInterestRate12M(Double.parseDouble(value));
-                    break;
-                case "baseLoanInterestRate":
-                    BankingSystem.setBaseLoanInterestRate(Double.parseDouble(value));
-                    break;
-                case "minSavingDeposit":
-                    BankingSystem.setMinSavingDeposit(Double.parseDouble(value));
-                    break;
+            if (key.equals("SystemDate")) {
+                bankingSystem.setSystemDate(LocalDate.now());
+            } else if (key.equals("BankName")) {
+                bankingSystem.setBankName(value);
+            } else if (key.equals("minCheckingBalance")) {
+                bankingSystem.setMinCheckingBalance(Double.parseDouble(value));
+            } else if (key.equals("demandInterestRate")) {
+                bankingSystem.setDemandInterestRate(Double.parseDouble(value));
+            } else if (key.equals("interestRate1M")) {
+                bankingSystem.setInterestRate1M(Double.parseDouble(value));
+            } else if (key.equals("interestRate6M")) {
+                bankingSystem.setInterestRate6M(Double.parseDouble(value));
+            } else if (key.equals("interestRate12M")) {
+                bankingSystem.setInterestRate12M(Double.parseDouble(value));
+            } else if (key.equals("baseLoanInterestRate")) {
+                bankingSystem.setBaseLoanInterestRate(Double.parseDouble(value));
+            } else if (key.equals("minSavingDeposit")) {
+                bankingSystem.setMinSavingDeposit(Double.parseDouble(value));
             }
         }
-
-        System.out.println("Data loaded successfully from files.");
     }
 
     private static Customer findCustomerById(int customerId) {
@@ -186,5 +181,17 @@ public class ReadFile {
             }
         }
         return null;
+    }
+
+    private static void addAccountToCustomer(Account account) {
+        Customer owner = account.getOwner();
+        if (owner == null) {
+            return;
+        }
+
+        if (owner.getAccountList() == null) {
+            owner.setAccountList(new ArrayList<>());
+        }
+        owner.getAccountList().add(account);
     }
 }

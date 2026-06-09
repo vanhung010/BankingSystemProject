@@ -52,34 +52,34 @@ public class CustomerView {
                     getAllAccount(customer.getUserId());
                     break;
                 case "2":
-//                    handleOpenCheckingAccount();
+//                   handleOpenCheckingAccount(); Bảo
                     break;
                 case "3":
-//                    handleOpenSavingAccount();
+//                    handleOpenSavingAccount();   Bảo
                     break;
                 case "4":
                     handleLoanRequest();
                     break;
                 case "5":
-//                    hanldeDeposite();
+//                    hanldeDeposite(); //Đức An
                     break;
                 case "6":
-//                    handleWithdraw();
+//                    handleWithdraw(); Đức An
                     break;
                 case "7":
 //                    handleTransfer();
                     break;
                 case "8":
-//                    handlePaymentLoan();
+//                    handlePaymentLoan();   // Đức An
                     break;
                 case "9":
-//                    handClosedSavingAccount();
+//                    handClosedSavingAccount();  // Minh Anh
                     break;
                 case "10":
-//                    handleViewTransactionHistory();
+//                    handleViewTransactionHistory(); Bảo
                     break;
                 case "11":
-//                    handleViewAccountDetails();
+//                    handleViewAccountDetails(); Băng
                     break;
                 case "0":
                     System.out.println("Đã đăng xuất!");

@@ -57,10 +57,10 @@ public class StaffView {
 
             switch (choice){
                 case "1":
-//                    showInformationCutomer();
+//                    showInformationCutomer();    //Minh anh
                     break;
                 case "2":
-//                    changeAccountStatus();
+//                    changeAccountStatus(); //Băng
                     break;
                 case "3":
                     showAllLoanRequestPending();
@@ -69,19 +69,19 @@ public class StaffView {
                     handleLoanRequest();
                     break;
                 case "5":
-//                    displayBankSettings();
+//                    displayBankSettings(); Minh anh
                     break;
                 case "6":
-//                    handleUpdateBankSettings();
+//                    handleUpdateBankSettings(); Baăng
                     break;
                 case "7":
                     handleUpdateTime();
                     break;
                 case "8":
-//                    handlePlusDaySystem();
+//                    handlePlusDaySystem(); Không làm
                     break;
                 case "9":
-//                    handleMinusDaySystem();
+//                    handleMinusDaySystem(); Không làm
                     break;
                 case "0":
                     System.out.println("Đã đăng xuất!");

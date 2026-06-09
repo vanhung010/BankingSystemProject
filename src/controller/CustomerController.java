@@ -1,5 +1,6 @@
 package controller;
 
+import model.entity.Account;
 import model.entity.Customer;
 import model.service.AccountService;
 import model.service.LoanService;
@@ -54,3 +55,4 @@ public class CustomerController {
         return timeService.getSystemDate();
     }
 }
+        }

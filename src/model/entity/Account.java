@@ -1,9 +1,11 @@
 package model.entity;
 
 import model.entity.enums.AccountStatus;
+import model.pattern.observer.AccountStatusObserver;
 import model.pattern.strategy.InterestStrategy;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Account {
@@ -13,6 +15,22 @@ public abstract class Account {
     private Customer owner;
     private LocalDate createdAt;
     private InterestStrategy interestStrategy;
+    private List<AccountStatusObserver> observers = new ArrayList<>();
+
+    public void addObserver(AccountStatusObserver o) { observers.add(o); }
+
+    // Thêm mới: changeState thay thế setAccountStatus trực tiếp
+    public void changeState(AccountStatus newStatus) {
+        AccountStatus old = this.accountStatus;
+        // Chặn CLOSED → bất kỳ (không mở lại được)
+        if (old == AccountStatus.CLOSED) {
+            throw new RuntimeException("Tài khoản đã đóng, không thể thay đổi trạng thái");
+        }
+        this.accountStatus = newStatus;
+        // Notify tất cả observer
+        for (AccountStatusObserver o : observers)
+            o.onStatusChanged(this, old, newStatus);
+    }
 
     private List<Transaction> transactionList;
 

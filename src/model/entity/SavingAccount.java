@@ -48,4 +48,19 @@ public class SavingAccount extends Account {
     public void setInterest(double interest) {
         this.interest = interest;
     }
+
+    public void savingExtension() {
+
+            //cộng tiền lãi vào tài khoản
+            //cập nhật ngày bắt đầu = ngày hết hạn
+            //cập nhật ngày hết hạn mới
+            this.setBalance(calcInterestAmount()+this.getBalance());
+            this.setDepositDate(this.getMaturityDate());
+            this.setMaturityDate(this.getDepositDate().plusMonths(term));
+        }
+
+
+    public double calcInterestAmount(){
+        return super.getInterestStrategy().calcInterest(this.getBalance(), this.getInterest(), this.getTerm());
+    }
 }

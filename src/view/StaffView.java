@@ -15,21 +15,25 @@ public class StaffView {
     private Staff staff;
     Scanner scanner = new Scanner(System.in);
     private StaffController staffController = new StaffController();
+    CustomerView customerUI;
+
 
     public StaffView(Staff staff) {
-
-
         this.staff = staff;
+    }
+
+    public StaffView() {
 
     }
+
     public void run(){
         while(true){
-//            LocalDate currentDate = systemDao.getTimeSystem();
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//            String formattedDate = currentDate.format(formatter);
+            LocalDate currentDate = staffController.getSystemTime();;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String formattedDate = currentDate.format(formatter);
             System.out.println("===================================================");
             System.out.printf("Xin chào, %s | Role: STAFF %n", staff.getUserName());
-//            System.out.printf("Ngày hệ thống: %s %n", formattedDate);
+            System.out.printf("Ngày hệ thống: %s %n", formattedDate);
             System.out.println("===================================================");
             System.out.println("--- QUẢN LÝ KHÁCH HÀNG & TÀI KHOẢN ---");
             System.out.println("1. Tìm kiếm thông tin Khách hàng");
@@ -59,7 +63,7 @@ public class StaffView {
 //                    changeAccountStatus();
                     break;
                 case "3":
-//                    handleCheckAllLoanRequestPending();
+                    showAllLoanRequestPending();
                     break;
                 case "4":
                     handleLoanRequest();
@@ -71,7 +75,7 @@ public class StaffView {
 //                    handleUpdateBankSettings();
                     break;
                 case "7":
-//                    handleUpdateTime();
+                    handleUpdateTime();
                     break;
                 case "8":
 //                    handlePlusDaySystem();
@@ -88,8 +92,12 @@ public class StaffView {
         }
     }
 
-    public void handleLoanRequest(){
-        handleCheckAllLoanRequestPending(); //show danh sách những khoản vay đang chờ xét duyệt
+    private void handleUpdateTime() {
+        staffController.handleUpdateTime();
+    }
+
+    private void handleLoanRequest() {
+        showAllLoanRequestPending(); //show danh sách những khoản vay đang chờ xét duyệt
         System.out.println("Nhập id của khoản vay muốn xử lí");
         String idLoanRequestString = scanner.nextLine();
 
@@ -105,9 +113,10 @@ public class StaffView {
         String choice = scanner.nextLine();
         if(choice.equals("1")){
             Customer customer = staffController.getCustomerById(String.valueOf(loanRequest.getCustomerOwner().getUserId()));
-            CustomerView customerUI = new CustomerView(customer);
-            // using directly customerUI method is fine or we should have an option, but keep logic
-            customerUI.checkAllAccount(loanRequest.getCustomerOwner().getUserId());
+
+            customerUI = new CustomerView(customer);
+
+            customerUI.getAllAccount(loanRequest.getCustomerOwner().getUserId());
             System.out.println("Nhập id tài khoản thanh toán nhận tiền");
             String idAccountString = scanner.nextLine();
 
@@ -122,10 +131,15 @@ public class StaffView {
             return;
         }
     }
-    public void handleCheckAllLoanRequestPending(){
+
+    public void showAllLoanRequestPending(){
 
         try{
             List<LoanRequest> loanRequestList = staffController.getAllLoanRequestPending();
+            if(loanRequestList == null || loanRequestList.size() == 0){
+                System.out.println("Danh sách yêu cầu vay đang trống");
+                return;
+            }
             System.out.println("\n===============================================================================");
             System.out.println("                 DANH SÁCH YÊU CẦU VAY CHỜ DUYỆT (PENDING)");
             System.out.println("===============================================================================");
@@ -147,6 +161,6 @@ public class StaffView {
             System.out.println(e.getMessage());
             return;
         }
-
     }
+
 }

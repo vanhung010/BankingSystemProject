@@ -48,5 +48,25 @@ public class DataCenter {
         return bankingSystem;
     }
 
+    public void setBankingSystem(BankingSystem bankingSystem) {
+        this.bankingSystem = bankingSystem;
+    }
+
+    public void setAccountList(List<Account> accountList) {
+        this.accountList = accountList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public void setLoanRequestList(List<LoanRequest> loanRequestList) {
+        this.loanRequestList = loanRequestList;
+    }
+
+    public void setTransactionList(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
+    }
+
     public static void testMethod(){}
 }

@@ -2,7 +2,12 @@ package controller;
 
 import model.entity.Customer;
 import model.service.AccountService;
-import java.util.Scanner;
+import model.service.LoanService;
+import model.service.TimeService;
+import util.ParseNumber;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public class CustomerController {
     private final AccountService accountService;
@@ -13,8 +18,10 @@ public class CustomerController {
         this.scanner = new Scanner(System.in);
     }
 
-    public void handleOpenCheckingAccount(Customer customer) {
-        System.out.println("MỞ TÀI KHOẢN GIAO DỊCH");
+    private LoanService loanService = new LoanService();
+    private AccountService accountService = new AccountService();
+    private TimeService timeService = new TimeService();
+
 
         // 1. Nhập mã tài khoản mới
         System.out.print("Nhập mã số tài khoản mới: ");
@@ -36,6 +43,14 @@ public class CustomerController {
         } else {
             System.out.println("Hệ thống thông báo: Vui lòng thử lại với thông tin hợp lệ.");
         }
+        return mess;
+    }
 
+    public List<Account> getAllAccountOfCustomer(Customer customer) {
+        return accountService.getAllAccount(customer.getUserId());
+    }
+
+    public LocalDate getDateSystem() {
+        return timeService.getSystemDate();
     }
 }

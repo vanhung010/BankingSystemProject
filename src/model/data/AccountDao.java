@@ -129,4 +129,18 @@ public class AccountDao {
             }
         }
     }
+    // Thêm hàm này vào để chuẩn hóa việc lưu tài khoản mới qua tầng DAO
+    public void addNewAccount(Account account) {
+        // 1. Lưu vào kho chung của hệ thống
+        dataCenter.getAccountList().add(account);
+
+        // 2. Cập nhật vào danh sách tài khoản cá nhân của khách hàng
+        Customer owner = (Customer) account.getOwner();
+        if (owner != null) {
+            if (owner.getAccountList() == null) {
+                owner.setAccountList(new java.util.ArrayList<>());
+            }
+            owner.getAccountList().add(account);
+        }
+    }
 }

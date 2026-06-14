@@ -2,6 +2,7 @@ package controller;
 
 import model.entity.Account;
 import model.entity.Customer;
+import model.entity.Transaction;
 import model.service.AccountService;
 import model.service.LoanService;
 import model.service.TimeService;
@@ -52,40 +53,17 @@ public class CustomerController {
     }
 
 
-    public void handleOpenCheckingAccount(Customer customer) {
-        System.out.println("\n--- MỞ TÀI KHOẢN THANH TOÁN ---");
-        System.out.print("Nhập số tiền nạp ban đầu (VNĐ): ");
-        double amount = Double.parseDouble(scanner.nextLine());
 
-        String result = accountService.openCheckingAccount(customer, amount);
-        System.out.println(result);
+    public String handleOpenCheckingAccount(Customer customer, double amount) {
+        return accountService.openCheckingAccount(customer, amount);
     }
 
-    public void handleOpenSavingAccount(Customer customer) {
-        System.out.println("\n--- MỞ SỔ TIẾT KIỆM ---");
-        System.out.print("Nhập Mã số tài khoản thanh toán: ");
-        int checkingAccId = Integer.parseInt(scanner.nextLine());
 
-        System.out.print("Nhập số tiền muốn gửi tiết kiệm: ");
-        double amount = Double.parseDouble(scanner.nextLine());
-
-        System.out.print("Nhập kỳ hạn gửi: ");
-        int term = Integer.parseInt(scanner.nextLine());
-
-        String result = accountService.openSavingAccount(customer, checkingAccId, amount, term);
-        System.out.println(result);
-    }
-
-    public void handleViewTransactionHistory(Customer customer) {
-        System.out.println("\n--- XEM LỊCH SỬ GIAO DỊCH ---");
-        System.out.print("Nhập mã số tài khoản cần xem sao kê: ");
-
-        java.util.Scanner inputScanner = new java.util.Scanner(System.in);
-        try {
-            int accountId = Integer.parseInt(inputScanner.nextLine());
-            transactionService.viewTransactionHistory(customer, accountId);
-        } catch (NumberFormatException e) {
-            System.out.println("=> Lỗi: Mã tài khoản phải là một số hợp lệ!");
-        }
+    public String handleOpenSavingAccount(Customer customer, int checkingAccId,
+                                      double amount, int term) {
+        return accountService.openSavingAccount(customer, checkingAccId, amount, term);
+}
+    public List<Transaction> handleViewTransactionHistory(Customer customer, int accountId) {
+        return accountService.getTransactionHistory(customer, accountId);
     }
 }

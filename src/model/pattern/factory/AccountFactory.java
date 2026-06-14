@@ -1,13 +1,12 @@
 package model.pattern.factory;
 
-import jdk.jfr.DataAmount;
 import model.data.DataCenter;
 import model.entity.*;
 import model.entity.enums.AccountStatus;
 import model.pattern.strategy.LoanInterestStrategy;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 public class AccountFactory {
     private static DataCenter dataCenter = DataCenter.getInstance();

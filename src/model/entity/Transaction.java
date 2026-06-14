@@ -79,4 +79,18 @@ public class Transaction {
         public void setDescription(String description) {
                 this.description = description;
         }
+
+        //hàm in biên lai giao dịch
+        public void printReceipt() {
+                // Định dạng thời gian<dễ nhìn>
+                String timeString = "";
+                if (this.timestamp != null) {
+                        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                        timeString = this.timestamp.format(formatter);
+                }
+
+                // căn
+                System.out.printf("Mã GD: %-5d | Loại: %-20s | Số tiền: %15.2f VNĐ | Thời gian: %-20s | Nội dung: %s\n",
+                        transactionId, transactionType, amount, timeString, description);
+        }
 }

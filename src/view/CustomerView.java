@@ -2,9 +2,11 @@ package view;
 
 import controller.CustomerController;
 import model.entity.*;
+import model.entity.enums.AccountStatus;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -52,10 +54,10 @@ public class CustomerView {
                     getAllAccount(customer.getUserId());
                     break;
                 case "2":
-                    customerController.handleOpenCheckingAccount(customer); //BẢO
+                    handleOpenCheckingAccount(); //BẢO
                     break;
                 case "3":
-                    customerController.handleOpenSavingAccount(customer);   //Bảo
+                    handleOpenSavingAccount();   //Bảo
                     break;
                 case "4":
                     handleLoanRequest();
@@ -76,7 +78,7 @@ public class CustomerView {
 //                    handClosedSavingAccount();  // Minh Anh
                     break;
                 case "10":
-                    customerController.handleViewTransactionHistory(customer); //Bảo
+                    handleViewTransactionHistory(); //Bảo
                     break;
                 case "11":
 //                    handleViewAccountDetails(); Băng
@@ -154,5 +156,113 @@ public class CustomerView {
 
    }
 
+    private void handleOpenCheckingAccount() {
+        System.out.println("\n--- MỞ TÀI KHOẢN THANH TOÁN ---");
+        System.out.print("Nhập số tiền nạp ban đầu (VNĐ): ");
+        try {
+            double amount = Double.parseDouble(scanner.nextLine());
+            String result = customerController.handleOpenCheckingAccount(customer, amount);
+            System.out.println(result);
+        } catch (NumberFormatException e) {
+            System.out.println("Lỗi: Số tiền không hợp lệ!");
+        }
+    }
+
+    private void handleOpenSavingAccount() {
+        System.out.println("\n--- MỞ SỔ TIẾT KIỆM ---");
+
+        // 1) Lấy danh sách tài khoản THANH TOÁN đang ACTIVE
+        List<Account> allAccounts = customerController.getAllAccountOfCustomer(customer);
+        List<CheckingAccount> checkingAccounts = new ArrayList<>();
+        if (allAccounts != null) {
+            for (Account a : allAccounts) {
+                if (a instanceof CheckingAccount
+                        && a.getAccountStatus() == AccountStatus.ACTIVE) {
+                    checkingAccounts.add((CheckingAccount) a);
+                }
+            }
+        }
+
+        if (checkingAccounts.isEmpty()) {
+            System.out.println("Bạn chưa có tài khoản THANH TOÁN nào đang hoạt động.");
+            System.out.println("Vui lòng mở tài khoản Thanh toán trước khi mở Sổ Tiết Kiệm.");
+            return;
+        }
+
+        // 2) Hiển thị danh sách ddowx nhaamf
+        System.out.println("---------------------------------------------------------");
+        System.out.println("Danh sách tài khoản THANH TOÁN khả dụng:");
+        System.out.printf("%-10s | %-18s | %-10s%n", "ID", "Số dư (VNĐ)", "Trạng thái");
+        System.out.println("---------------------------------------------------------");
+        for (CheckingAccount c : checkingAccounts) {
+            System.out.printf("%-10d | %,18.2f | %-10s%n",
+                    c.getAccountId(), c.getBalance(), c.getAccountStatus());
+        }
+        System.out.println("---------------------------------------------------------");
+
+        // 3) Nhập dữ liệu
+        try {
+            System.out.print("Nhập Mã số tài khoản thanh toán muốn dùng: ");
+            int checkingAccId = Integer.parseInt(scanner.nextLine());
+
+            // Kiểm tra ID nhập
+            boolean valid = false;
+            for (CheckingAccount c : checkingAccounts) {
+                if (c.getAccountId() == checkingAccId) {
+                    valid = true;
+                    break;
+                }
+            }
+            if (!valid) {
+                System.out.println("Lỗi: Mã tài khoản không nằm trong danh sách tài khoản Thanh toán của bạn.");
+                return;
+            }
+
+            System.out.print("Nhập số tiền muốn gửi tiết kiệm (VNĐ): ");
+            double amount = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Nhập kỳ hạn gửi (1 - 6 - 12 tháng): ");
+            int term = Integer.parseInt(scanner.nextLine());
+
+            // Kiểm tra kỳ hạn hợp lệ
+            if (term != 1 && term != 6 && term != 12) {
+                System.out.println("Lỗi: Kỳ hạn gửi không hợp lệ! Chỉ chấp nhận 1,6 hoặc 12 tháng.");
+                return;
+            }
+
+            String result = customerController.handleOpenSavingAccount(
+                    customer, checkingAccId, amount, term);
+            System.out.println(result);
+        } catch (NumberFormatException e) {
+            System.out.println("Lỗi: Vui lòng nhập đúng định dạng số ");
+        }
+    }
+    private void handleViewTransactionHistory() {
+        System.out.println("\n--- XEM LỊCH SỬ GIAO DỊCH ---");
+        System.out.print("Nhập mã số tài khoản cần xem sao kê: ");
+        try {
+            int accountId = Integer.parseInt(scanner.nextLine());
+
+            List<Transaction> transactions =
+                    customerController.handleViewTransactionHistory(customer, accountId);
+
+            System.out.println("\n=========================================================================================================");
+            System.out.println("                          SAO KÊ GIAO DỊCH TÀI KHOẢN: " + accountId);
+            System.out.println("=========================================================================================================");
+            if (transactions.isEmpty()) {
+                System.out.println("   Tài khoản này chưa có giao dịch nào phát sinh.");
+            } else {
+                for (Transaction t : transactions) {
+                    t.printReceipt();
+                }
+            }
+            System.out.println("=========================================================================================================");
+
+        } catch (NumberFormatException e) {
+            System.out.println("=> Lỗi: Mã tài khoản phải là một số hợp lệ!");
+        } catch (RuntimeException e) {
+            System.out.println("=> Lỗi: " + e.getMessage());
+        }
+    }
 
 }

@@ -52,10 +52,10 @@ public class CustomerView {
                     getAllAccount(customer.getUserId());
                     break;
                 case "2":
-//                   handleOpenCheckingAccount(); Bảo
+                    customerController.handleOpenCheckingAccount(customer); //BẢO
                     break;
                 case "3":
-//                    handleOpenSavingAccount();   Bảo
+                    customerController.handleOpenSavingAccount(customer);   //Bảo
                     break;
                 case "4":
                     handleLoanRequest();
@@ -76,7 +76,7 @@ public class CustomerView {
 //                    handClosedSavingAccount();  // Minh Anh
                     break;
                 case "10":
-//                    handleViewTransactionHistory(); Bảo
+                    customerController.handleViewTransactionHistory(customer); //Bảo
                     break;
                 case "11":
 //                    handleViewAccountDetails(); Băng

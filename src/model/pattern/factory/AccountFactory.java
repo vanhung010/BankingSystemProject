@@ -2,9 +2,7 @@ package model.pattern.factory;
 
 import jdk.jfr.DataAmount;
 import model.data.DataCenter;
-import model.entity.BankingSystem;
-import model.entity.Customer;
-import model.entity.LoanAccount;
+import model.entity.*;
 import model.entity.enums.AccountStatus;
 import model.pattern.strategy.LoanInterestStrategy;
 
@@ -32,5 +30,37 @@ public class AccountFactory {
         loanAccount.setMonthlyRequiredPayment(balance / loanTerm);
 
         return loanAccount;
+    }
+    // Tạo tài khoản thanh toán (CheckingAccount)
+    public static CheckingAccount createCheckingAccount(Customer customer, double initialBalance) {
+        CheckingAccount checkingAccount = new CheckingAccount();
+        checkingAccount.setAccountId(dataCenter.getAccountList().size() + 1);
+        checkingAccount.setBalance(initialBalance);
+        checkingAccount.setAccountStatus(AccountStatus.ACTIVE);
+        checkingAccount.setOwner(customer);
+        checkingAccount.setCreatedAt(LocalDate.now());
+
+        // Lấy số dư tối thiểu từ ngân hàng
+        if (dataCenter.getBankingSystem() != null) {
+            checkingAccount.setMinBalance(dataCenter.getBankingSystem().getMinCheckingBalance());
+        }
+
+        return checkingAccount;
+    }
+    // Tạo sổ tiết kiệm (SavingAccount)
+    public static SavingAccount createSavingAccount(Customer customer, double initialBalance, int term) {
+        SavingAccount savingAccount = new SavingAccount();
+        savingAccount.setAccountId(dataCenter.getAccountList().size() + 1);
+        savingAccount.setBalance(initialBalance);
+        savingAccount.setAccountStatus(AccountStatus.ACTIVE);
+        savingAccount.setOwner(customer);
+        savingAccount.setCreatedAt(LocalDate.now());
+
+        // Thiết lập các kì hạnh
+        savingAccount.setTerm(term);
+        savingAccount.setDepositDate(LocalDate.now());
+        savingAccount.setMaturityDate(LocalDate.now().plusMonths(term));
+
+        return savingAccount;
     }
 }

@@ -75,8 +75,8 @@ public class CustomerView {
 //                    handlePaymentLoan();   // Đức An
                     break;
                 case "9":
-//                    handClosedSavingAccount();  // Minh Anh
-                    break;
+                     handleCloseSavingAccount();
+                     break;
                 case "10":
                     handleViewTransactionHistory(); //Bảo
                     break;
@@ -318,4 +318,42 @@ public class CustomerView {
         }
         System.out.println("=========================================================");
     }
+
+    private void handleCloseSavingAccount() {
+        System.out.println("\n--- TẤT TOÁN SỔ TIẾT KIỆM ---");
+        
+        // Hiển thị danh sách sổ tiết kiệm có thể tất toán
+        String savingList = customerController.viewClosableSavingAccounts(customer.getUserId());
+        System.out.println(savingList);
+
+        // Nhập ID tài khoản muốn tất toán
+        System.out.print("Nhập mã số sổ tiết kiệm muốn tất toán (hoặc 0 để hủy): ");
+        try {
+            int accountId = Integer.parseInt(scanner.nextLine());
+            
+            if (accountId == 0) {
+                System.out.println("Hủy tất toán.");
+                return;
+            }
+
+            // Xác nhận tất toán
+            System.out.print("⚠️  Bạn có chắc chắn muốn tất toán sổ tiết kiệm này? (y/n): ");
+            String confirm = scanner.nextLine().trim().toLowerCase();
+            
+            if (!confirm.equals("y") && !confirm.equals("yes")) {
+                System.out.println("Hủy tất toán.");
+                return;
+            }
+
+            // Gọi service để tất toán
+            String result = customerController.closeSavingAccount(accountId);
+            System.out.println(result);
+
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Lỗi: Mã tài khoản phải là một số hợp lệ!");
+        } catch (Exception e) {
+            System.out.println("❌ Lỗi: " + e.getMessage());
+        }
+    }
 }
+

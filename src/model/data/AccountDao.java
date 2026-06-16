@@ -25,17 +25,26 @@ public class AccountDao {
     }
 
     public Account getAccountById(int idAccount) {
-        // Danh sách account đã được nạp vào DataCenter, nên chỉ cần duyệt dữ liệu trong bộ nhớ.
-        for (Account account : dataCenter.getAccountList()) {
-            // So sánh accountId cần tìm với accountId của từng account trong DataCenter.
-            if (account.getAccountId() == idAccount) {
-                return account;
-            }
-        }
+         // Danh sách account đã được nạp vào DataCenter, nên chỉ cần duyệt dữ liệu trong bộ nhớ.
+         for (Account account : dataCenter.getAccountList()) {
+             // So sánh accountId cần tìm với accountId của từng account trong DataCenter.
+             if (account.getAccountId() == idAccount) {
+                 return account;
+             }
+         }
 
-        // Giữ nguyên output cũ: nếu không tìm thấy account thì trả về null.
-        return null;
-    }
+         // Giữ nguyên output cũ: nếu không tìm thấy account thì trả về null.
+         return null;
+     }
+
+     public SavingAccount getSavingAccountById(int idAccount) {
+         for (Account account : dataCenter.getAccountList()) {
+             if (account instanceof SavingAccount && account.getAccountId() == idAccount) {
+                 return (SavingAccount) account;
+             }
+         }
+         return null;
+     }
 
     public void addLoanAccount(int userId, double requestAmount, int loanTerm) {
         if (loanTerm <= 0) {

@@ -69,7 +69,7 @@ public class CustomerView {
 //                    handleWithdraw(); Đức An
                     break;
                 case "7":
-//                    handleTransfer();
+                   handleTransfer();
                     break;
                 case "8":
 //                    handlePaymentLoan();   // Đức An
@@ -264,5 +264,58 @@ public class CustomerView {
             System.out.println("=> Lỗi: " + e.getMessage());
         }
     }
+    private void handleTransfer(){
+        checkAllAccount(customer.getUserId());
 
+        System.out.println("Nhập id tài khoản thanh toán chuyển tiền");
+        String idAccountSourceString = scanner.nextLine();
+        System.out.println("Nhập id tài khoản thanh toán nhận tiền");
+        String idAccountTargetString = scanner.nextLine();
+        System.out.println("Nhập số tiền chuyển.");
+        String amountString = scanner.nextLine();
+        System.out.println("Nhập mô tả.");
+        String description = scanner.nextLine();
+
+        String mess = customerController.transfer(amountString, idAccountSourceString, idAccountTargetString, description);
+        System.out.println(mess);
+    }
+    public void checkAllAccount(int idCustomer){
+        System.out.println("\n=========================================================");
+        System.out.println("               THÔNG TIN CÁ NHÂN & SỐ DƯ");
+        System.out.println("=========================================================");
+        System.out.println("👤 Khách hàng: " + customer.getFullName());
+        System.out.println("📧 Email     : " + customer.getEmail());
+        System.out.println("Thu nhập     : "+customer.getMonthlyIncome());
+
+        System.out.println("---------------------------------------------------------");
+        System.out.println("💳 DANH SÁCH TÀI KHOẢN:");
+
+
+        List<Account> accounts = customerController.getAllAccountOfCustomer(customer);
+
+
+
+        if (accounts == null || accounts.isEmpty()) {
+            System.out.println("❌ Bạn chưa mở tài khoản nào tại hệ thống HKL Bank.");
+        } else {
+
+            System.out.printf("%-10s | %-15s | %-15s | %-10s\n",
+                    "ID", "Loại tài khoản", "Số dư (VNĐ)", "Trạng thái");
+            System.out.println("---------------------------------------------------------");
+
+            // Duyệt qua từng tài khoản và in ra
+            for (Account acc : accounts) {
+                String accountType = getAccountTypeName(acc);
+
+                // %-10d: In số nguyên ID
+                // %15.2f: In số thập phân, căn phải (không có dấu -), lấy 2 số sau dấu phẩy
+                System.out.printf("%-10d | %-15s | %15.2f | %-10s\n",
+                        acc.getAccountId(),
+                        accountType,
+                        acc.getBalance(),
+                        acc.getAccountStatus());
+            }
+        }
+        System.out.println("=========================================================");
+    }
 }

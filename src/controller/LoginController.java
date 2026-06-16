@@ -4,6 +4,7 @@ import model.entity.Customer;
 import model.entity.Staff;
 import model.entity.User;
 import model.service.AuthService;
+import util.ParseNumber;
 import view.CustomerView;
 import view.StaffView;
 
@@ -34,6 +35,16 @@ public class LoginController {
 
         } else {
             System.out.println("Tên đăng nhập hoặc mật khẩu không đúng.");
+        }
+    }
+
+    public String register(String userName, String password, String fullName, String email, String monlyIncomeDouble){
+        try{
+            authService.registerCustomer(userName, password, fullName, email, ParseNumber.parseDouble(monlyIncomeDouble));
+            return "Đăng kí thành công";
+        }
+        catch (RuntimeException e){
+            return e.getMessage();
         }
     }
 }

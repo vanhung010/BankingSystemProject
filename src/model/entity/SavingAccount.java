@@ -63,4 +63,14 @@ public class SavingAccount extends Account {
     public double calcInterestAmount(){
         return super.getInterestStrategy().calcInterest(this.getBalance(), this.getInterest(), this.getTerm());
     }
+
+    @Override
+    public void withdraw(double amount) {
+        throw new RuntimeException("không thực hiện");
+    }
+
+    @Override
+    public void deposit(double amount) {
+        throw new RuntimeException("không thực hiện");
+    }
 }

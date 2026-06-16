@@ -66,4 +66,24 @@ public class CustomerController {
     public List<Transaction> handleViewTransactionHistory(Customer customer, int accountId) {
         return accountService.getTransactionHistory(customer, accountId);
     }
+
+    public String transfer(String amountString, String idAccountSourceString, String idAccountTargetString, String description) {
+        int idAccountSource = 0;
+        int idAccountTarget = 0;
+        double amount = 0;
+        //đổi kiểu dữ liệu
+        try {
+            idAccountSource = ParseNumber.parseint(idAccountSourceString);
+            idAccountTarget = ParseNumber.parseint(idAccountTargetString);
+            amount = ParseNumber.parseDouble(amountString);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+        try {
+            transactionService.tranfer(amount, idAccountSource, idAccountTarget, description);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+        return "Thông báo: Chuyển khoản thành công!";
+    }
 }

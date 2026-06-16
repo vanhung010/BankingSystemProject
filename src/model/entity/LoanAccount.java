@@ -85,4 +85,14 @@ public class LoanAccount extends Account{
     public boolean checkPaid(){
         return this.amountPaidThisMonth >= this.monthlyRequiredPayment;
     }
+
+    @Override
+    public void withdraw(double amount) {
+        throw new RuntimeException("Không thực hiện được");
+    }
+
+    @Override
+    public void deposit(double amount) {
+        throw new RuntimeException("không thực hiện");
+    }
 }

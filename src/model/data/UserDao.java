@@ -2,15 +2,11 @@ package model.data;
 
 import model.entity.Customer;
 import model.entity.User;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import model.entity.enums.Role;
 
 public class UserDao {
 
-    private DataCenter dataCenter = DataCenter.getInstance();
+    private final DataCenter dataCenter = DataCenter.getInstance();
 
     public User getUserByUsernameAndPassword(String username, String password) {
         for (User user : DataCenter.getInstance().getUserList()) {
@@ -25,11 +21,38 @@ public class UserDao {
 
         for(User user : dataCenter.getUserList()){
             if(user.getUserId() == id){
-                Customer customer = (Customer) user;
-                return customer;
+                return (Customer) user;
             }
         }
         return null;
 
+    }
+
+    public boolean checkEmailDuplicate(String email) {
+        if (email == null) return false;
+        for (User user : dataCenter.getUserList()) {
+            if (email.equalsIgnoreCase(user.getEmail())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean registerUser(Customer customer) {
+        if(checkEmailDuplicate(customer.getEmail())){
+            throw new RuntimeException("Trùng email");
+        }
+
+        int maxId = 0;
+        for (User u : dataCenter.getUserList()) {
+            if (u.getUserId() > maxId) {
+                maxId = u.getUserId();
+            }
+        }
+
+        customer.setUserId(maxId + 1);
+        customer.setRole(Role.CUSTOMER);
+
+        return dataCenter.getUserList().add(customer);
     }
 }

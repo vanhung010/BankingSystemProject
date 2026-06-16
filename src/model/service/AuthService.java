@@ -1,6 +1,8 @@
 package model.service;
 
 import model.data.UserDao;
+import model.entity.Customer;
+import model.entity.Staff;
 import model.entity.User;
 
 public class AuthService {
@@ -16,5 +18,18 @@ public class AuthService {
             return null;
         }
         return userDao.getUserByUsernameAndPassword(username, password);
+    }
+
+
+    public boolean registerCustomer(String username, String password, String fullName, String email, double monthlyIncome){
+        Customer user = new Customer();
+
+        user.setUserName(username);
+        user.setPassword(password);
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setMonthlyIncome(monthlyIncome);
+
+        return userDao.registerUser(user);
     }
 }

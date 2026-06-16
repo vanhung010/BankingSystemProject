@@ -25,7 +25,7 @@ public class LoginView {
                   promptLogin();
                     break;
                 case "2":
-//                    handleRegister();
+                    handleRegister();
                     break;
                 case "0":
                     System.out.println("Cảm ơn bạn đã sử dụng dịch vụ!");
@@ -46,5 +46,21 @@ public class LoginView {
 
         loginController.handleLogin(username, password);
     }
+    public void handleRegister(){
+        System.out.println("Nhập tên đăng nhập");
+        String userName = scanner.nextLine();
+        System.out.println("Nhập mật khẩu ");
+        String password = scanner.nextLine();
+        System.out.println("Nhập tên đầy đủ");
+        String fullName = scanner.nextLine();
+        System.out.println("Nhập email");
+        String email = scanner.nextLine();
+        System.out.println("Nhập thu nhập hàng tháng");
+        String monlyIncomeString = scanner.nextLine();
 
+
+        String message = loginController.register(userName, password, fullName, email, monlyIncomeString);
+
+        System.out.println(message);
+    }
 }

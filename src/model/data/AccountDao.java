@@ -91,11 +91,7 @@ public class AccountDao {
     }
 
     public void lockAccount(LoanAccount loanAccount) {
-        for(Account account1 : DataCenter.getInstance().getAccountList()){
-            if(account1.equals(loanAccount)){
-                account1.setAccountStatus(AccountStatus.LOCKED);
-            }
-        }
+       loanAccount.changeState(AccountStatus.LOCKED,  "Không thanh toán đủ nợ tháng này");
     }
 
     public void updateMonlyRequiredPayment(LoanAccount loanAccount) {

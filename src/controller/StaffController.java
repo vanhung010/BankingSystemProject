@@ -66,12 +66,19 @@ public class StaffController {
     }
 
     public void handleUpdateTime(){
-        // Chỉ còn 1 dòng — Observer tự lo phần còn lại
+
         systemService.updateDateSystemPlus1Month();
+    }
+
+    public void plusDaySystem(int days) {
+        systemService.updateDateSystemPlusDays(days);
+    }
+
+    public void minusDaySystem(int days) {
+        systemService.updateDateSystemMinusDays(days);
     }
 
     public LocalDate getSystemTime() {
         return timeService.getSystemDate();
     }
 }
-

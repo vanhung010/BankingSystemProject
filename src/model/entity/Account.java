@@ -20,7 +20,7 @@ public abstract class Account {
     public void addObserver(AccountStatusObserver o) { observers.add(o); }
 
     // Thêm mới: changeState thay thế setAccountStatus trực tiếp
-    public void changeState(AccountStatus newStatus) {
+    public void changeState(AccountStatus newStatus, String reason) {
         AccountStatus old = this.accountStatus;
         // Chặn CLOSED → bất kỳ (không mở lại được)
         if (old == AccountStatus.CLOSED) {
@@ -29,7 +29,7 @@ public abstract class Account {
         this.accountStatus = newStatus;
         // Notify tất cả observer
         for (AccountStatusObserver o : observers)
-            o.onStatusChanged(this, old, newStatus);
+            o.onStatusChanged(this, old, newStatus, reason);
     }
 
     private List<Transaction> transactionList;

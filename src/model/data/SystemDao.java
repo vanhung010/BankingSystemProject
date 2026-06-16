@@ -18,6 +18,14 @@ public class SystemDao {
         dataCenter.getBankingSystem().setSystemDate( dataCenter.getBankingSystem().getSystemDate().plusMonths(1));
     }
 
+    public void updateDateSystemPlusDays(int days) {
+        dataCenter.getBankingSystem().setSystemDate( dataCenter.getBankingSystem().getSystemDate().plusDays(days));
+    }
+
+    public void updateDateSystemMinusDays(int days) {
+        dataCenter.getBankingSystem().setSystemDate( dataCenter.getBankingSystem().getSystemDate().minusDays(days));
+    }
+
     public double getInterestLoan() {
         return dataCenter.getBankingSystem().getBaseLoanInterestRate();
     }

@@ -18,9 +18,18 @@ public class SystemService implements MonthlyEventPublisher {
     public void notifyObservers() {
         for (MonthlyEventObserver o : observers) o.onMonthAdvanced();
     }
+
     // --- sửa updateDateSystemPlus1Month ---
     public void updateDateSystemPlus1Month() {
         systemDao.updateDateSystemPlus1Month(); // tăng tháng
         notifyObservers();                    // báo cho tất cả
+    }
+
+    public void updateDateSystemPlusDays(int days) {
+        systemDao.updateDateSystemPlusDays(days);
+    }
+
+    public void updateDateSystemMinusDays(int days) {
+        systemDao.updateDateSystemMinusDays(days);
     }
 }

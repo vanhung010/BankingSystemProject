@@ -17,6 +17,7 @@ public class LoanMonthlyObserver implements MonthlyEventObserver {
     @Override
     public void onMonthAdvanced() {
         loanService.lockLoanAccountMonthly();
+
         loanService.checkLockLoanAccount();
         loanService.autoUpdateMonthlyRequiredPayment();
         loanService.updateAmountPaidMonthly();

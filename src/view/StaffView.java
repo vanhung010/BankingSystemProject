@@ -78,10 +78,10 @@ public class StaffView {
                     handleUpdateTime();
                     break;
                 case "8":
-//                    handlePlusDaySystem(); Không làm
+                    handlePlusDaySystem();
                     break;
                 case "9":
-//                    handleMinusDaySystem(); Không làm
+                    handleMinusDaySystem();
                     break;
                 case "0":
                     System.out.println("Đã đăng xuất!");
@@ -94,6 +94,50 @@ public class StaffView {
 
     private void handleUpdateTime() {
         staffController.handleUpdateTime();
+    }
+
+    private void handlePlusDaySystem() {
+        System.out.print("Nhập số ngày muốn tăng: ");
+        String daysString = scanner.nextLine();
+        try {
+            int days = Integer.parseInt(daysString);
+            if (days <= 0) {
+                System.out.println("Số ngày phải lớn hơn 0!");
+                return;
+            }
+            LocalDate currentDate = staffController.getSystemTime();
+            LocalDate newDate = currentDate.plusDays(days);
+            if (newDate.getMonthValue() != currentDate.getMonthValue() || newDate.getYear() != currentDate.getYear()) {
+                System.out.println("Cộng ngày vượt qua tháng mới. Vui lòng chọn tính năng tăng 1 tháng!");
+            } else {
+                staffController.plusDaySystem(days);
+                System.out.println("Đã tăng thời gian hệ thống thêm " + days + " ngày.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Số ngày không hợp lệ.");
+        }
+    }
+
+    private void handleMinusDaySystem() {
+        System.out.print("Nhập số ngày muốn giảm: ");
+        String daysString = scanner.nextLine();
+        try {
+            int days = Integer.parseInt(daysString);
+            if (days <= 0) {
+                System.out.println("Số ngày phải lớn hơn 0!");
+                return;
+            }
+            LocalDate currentDate = staffController.getSystemTime();
+            LocalDate newDate = currentDate.minusDays(days);
+            if (newDate.getMonthValue() != currentDate.getMonthValue() || newDate.getYear() != currentDate.getYear()) {
+                System.out.println("Giảm ngày vượt qua tháng cũ. Không hợp lệ!");
+            } else {
+                staffController.minusDaySystem(days);
+                System.out.println("Đã giảm thời gian hệ thống đi " + days + " ngày.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Số ngày không hợp lệ.");
+        }
     }
 
     private void handleLoanRequest() {

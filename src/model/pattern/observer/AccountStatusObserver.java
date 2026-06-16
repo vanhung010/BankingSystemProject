@@ -6,5 +6,5 @@ import model.entity.enums.AccountStatus;
 public interface AccountStatusObserver {
     void onStatusChanged(Account account,
                          AccountStatus oldStatus,
-                         AccountStatus newStatus);
+                         AccountStatus newStatus, String reason);
 }

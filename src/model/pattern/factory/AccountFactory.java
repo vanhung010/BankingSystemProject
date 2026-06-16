@@ -3,7 +3,9 @@ package model.pattern.factory;
 import model.data.DataCenter;
 import model.entity.*;
 import model.entity.enums.AccountStatus;
+import model.pattern.observer.AccountStatusLogger;
 import model.pattern.strategy.LoanInterestStrategy;
+import model.pattern.strategy.TermInterestStrategy;
 
 import java.time.LocalDate;
 
@@ -12,7 +14,7 @@ public class AccountFactory {
     private static DataCenter dataCenter = DataCenter.getInstance();
 
 
-    public static LoanAccount createLoanAccount(Customer customer,double balance, int loanTerm){
+    public static LoanAccount createLoanAccount(Customer customer, double balance, int loanTerm) {
         LoanAccount loanAccount = new LoanAccount();
 
         loanAccount.setAccountId(dataCenter.getAccountList().size() + 1);
@@ -28,8 +30,11 @@ public class AccountFactory {
         loanAccount.setInterestStrategy(new LoanInterestStrategy());
         loanAccount.setMonthlyRequiredPayment(balance / loanTerm);
 
+        loanAccount.addObserver(new AccountStatusLogger());
+
         return loanAccount;
     }
+
     // Tạo tài khoản thanh toán (CheckingAccount)
     public static CheckingAccount createCheckingAccount(Customer customer, double initialBalance) {
         CheckingAccount checkingAccount = new CheckingAccount();
@@ -46,6 +51,7 @@ public class AccountFactory {
 
         return checkingAccount;
     }
+
     // Tạo sổ tiết kiệm (SavingAccount)
     public static SavingAccount createSavingAccount(Customer customer, double initialBalance, int term) {
         SavingAccount savingAccount = new SavingAccount();
@@ -59,7 +65,19 @@ public class AccountFactory {
         savingAccount.setTerm(term);
         savingAccount.setDepositDate(LocalDate.now());
         savingAccount.setMaturityDate(LocalDate.now().plusMonths(term));
+        //set chiên lược
+        savingAccount.setInterestStrategy(new TermInterestStrategy());
+        //set lãi
+        if (dataCenter.getBankingSystem() != null) {
+            if (term == 1) {
+                savingAccount.setInterest(dataCenter.getBankingSystem().getInterestRate1M());
+            } else if (term == 6) {
+                savingAccount.setInterest(dataCenter.getBankingSystem().getInterestRate6M());
+            } else if (term == 12) {
+                savingAccount.setInterest(dataCenter.getBankingSystem().getInterestRate12M());
+            }
 
+        }
         return savingAccount;
     }
 }

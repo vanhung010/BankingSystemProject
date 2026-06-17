@@ -194,4 +194,77 @@ public class LoanService {
         }
 
     }
+
+    public String payLoanDebt(Customer customer, int loanAccountId, double amount) {
+        // 1. Kiểm tra số tiền hợp lệ
+        if (amount <= 0) {
+            throw new RuntimeException("Số tiền thanh toán phải lớn hơn 0!");
+        }
+
+        // 2. Tìm tài khoản vay trực tiếp trong danh sách tài khoản của Customer truyền xuống
+        LoanAccount loanAcc = null;
+        if (customer.getAccountList() != null) {
+            for (Account acc : customer.getAccountList()) {
+                if (acc.getAccountId() == loanAccountId && acc instanceof LoanAccount) {
+                    loanAcc = (LoanAccount) acc;
+                    break;
+                }
+            }
+        }
+
+        if (loanAcc == null) {
+            throw new RuntimeException("Không tìm thấy tài khoản Vay mang mã số này của bạn!");
+        }
+
+        // 3. Kiểm tra trạng thái tài khoản
+        if (loanAcc.getAccountStatus() == model.entity.enums.AccountStatus.CLOSED) {
+            throw new RuntimeException("Tài khoản vay này đã đóng (CLOSED) do đã tất toán trước đó!");
+        }
+
+        // 4. Số dư balance của tài khoản vay đại diện cho dư nợ hiện tại
+        double currentDebt = loanAcc.getBalance();
+        if (amount > currentDebt) {
+            throw new RuntimeException(String.format("Số tiền nhập vào vượt quá tổng dư nợ hiện tại! Dư nợ tối đa cần trả: %,.2f VNĐ", currentDebt));
+        }
+
+        // 5. Cập nhật dữ liệu tài khoản vay
+        double newBalance = currentDebt - amount;
+        loanAcc.setBalance(newBalance);
+
+        // Cập nhật số tiền lũy tiến đã trả trong tháng này
+        double updatedPaidThisMonth = loanAcc.getAmountPaidThisMonth() + amount;
+        loanAcc.setAmountPaidThisMonth(updatedPaidThisMonth);
+
+        // Lưu cập nhật thông tin qua các DAO tương ứng trong hệ thống của bạn
+        accountDao.updateBalance(loanAcc.getAccountId(), loanAcc.getBalance());
+        loanDao.updatePaidThisMonth(loanAcc);
+
+        // 6. Tạo lịch sử giao dịch (Khớp chính xác với Constructor 6 tham số của Transaction.java)
+        Transaction transaction = new Transaction(
+                TransactionType.LOAN_PAYMENT,
+                amount,
+                LocalDateTime.now(),
+                loanAccountId,
+                null, // Tham số Object ignored
+                String.format("Thanh toan no khoan vay ID %d. So tien con lai: %,.2f VND", loanAccountId, newBalance)
+        );
+        transactionDao.addTransactionPlus(transaction);
+
+        // 7. [XỬ LÝ MẪU OBSERVER] Nếu đã trả sạch nợ (newBalance == 0) -> Đổi trạng thái sang CLOSED để trigger Observer
+        if (newBalance == 0) {
+            // Đăng ký AccountStatusLogger lắng nghe sự kiện đổi trạng thái trước khi thực hiện đổi
+            loanAcc.addObserver(new model.pattern.observer.AccountStatusLogger());
+
+            // Hàm changeState kế thừa từ Account sẽ tự động kích hoạt notify đến AccountStatusLogger
+            loanAcc.changeState(model.entity.enums.AccountStatus.CLOSED, "đã trả hết nợ");
+
+            // Cập nhật trạng thái mới của tài khoản vào database
+            accountDao.updateStatus(loanAcc.getAccountId(), model.entity.enums.AccountStatus.CLOSED);
+
+            return String.format("🎉 Chúc mừng! Bạn đã tất toán thành công toàn bộ khoản vay mã số %d.", loanAccountId);
+        }
+
+        return String.format("✅ Thanh toán thành công %,.2f VNĐ vào tài khoản vay %d.\n   - Số dư nợ còn lại: %,.2f VNĐ\n   - Tổng tiền đã thanh toán trong tháng này: %,.2f VNĐ (Yêu cầu tối thiểu tháng: %,.2f VNĐ)",
+                amount, loanAccountId, newBalance, updatedPaidThisMonth, loanAcc.getMonthlyRequiredPayment());
+    }
 }

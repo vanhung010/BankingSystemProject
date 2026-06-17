@@ -72,7 +72,7 @@ public class CustomerView {
                    handleTransfer();
                     break;
                 case "8":
-//                    handlePaymentLoan();   // Đức An
+                    handlePaymentLoan();
                     break;
                 case "9":
                      handleCloseSavingAccount();
@@ -90,6 +90,32 @@ public class CustomerView {
                     System.out.println("Lựa chọn không hợp lệ!");
             }
         }
+    }
+
+    private void handlePaymentLoan() {
+
+            System.out.println("\n=========================================================");
+            System.out.println("               THANH TOÁN NỢ KHOẢN VAY");
+            System.out.println("=========================================================");
+
+            try {
+                System.out.print("Nhập mã số tài khoản VAY cần thanh toán: ");
+                int loanAccountId = Integer.parseInt(scanner.nextLine());
+
+                System.out.print("Nhập số tiền bạn muốn thanh toán (VNĐ): ");
+                double amount = Double.parseDouble(scanner.nextLine());
+
+                // Gọi điều phối xuống Controller để xử lý nghiệp vụ
+                String result = customerController.handlePayLoanDebt(customer, loanAccountId, amount);
+                System.out.println(result);
+
+            } catch (NumberFormatException e) {
+                System.out.println("❌ => Lỗi: Mã tài khoản hoặc số tiền nhập vào phải là một số hợp lệ!");
+            } catch (RuntimeException e) {
+                System.out.println("❌ => Lỗi: " + e.getMessage());
+            }
+            System.out.println("=========================================================");
+
     }
 
     public void getAllAccount(int userId) {

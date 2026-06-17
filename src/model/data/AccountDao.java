@@ -148,4 +148,13 @@ public class AccountDao {
             owner.getAccountList().add(account);
         }
     }
+
+    public void updateStatus(int accountId, model.entity.enums.AccountStatus newStatus) {
+        for (model.entity.Account acc : dataCenter.getAccountList()) {
+            if (acc.getAccountId() == accountId) {
+                acc.setAccountStatus(newStatus);
+                break;
+            }
+        }
+    }
 }

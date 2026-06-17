@@ -94,4 +94,13 @@ public class CustomerController {
       public String viewClosableSavingAccounts(int customerId) {
           return savingService.getClosableSavingAccounts(customerId);
       }
- }
+
+    public String handlePayLoanDebt(Customer customer, int loanAccountId, double amount) {
+        try {
+            // Gọi nghiệp vụ xử lý từ loanService
+            return loanService.payLoanDebt(customer, loanAccountId, amount);
+        } catch (RuntimeException e) {
+            return "❌ Giao dịch thất bại: " + e.getMessage();
+        }
+    }
+}

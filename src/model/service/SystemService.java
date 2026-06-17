@@ -5,6 +5,7 @@ import model.data.DataCenter;
 import model.entity.BankingSystem;
 import model.pattern.observer.MonthlyEventObserver;
 import model.pattern.observer.MonthlyEventPublisher;
+import util.ParseNumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,5 +173,13 @@ public class SystemService implements MonthlyEventPublisher {
 
         result.append("\n============================================================\n");
         return result.toString();
+    }
+
+    public void updateConfigValue(String thongSo, String valueString){
+        double value = ParseNumber.parseDouble(valueString);
+        boolean success = systemDao.updateConfigValue(thongSo, value);
+        if(!success) {
+            throw new RuntimeException("Cập nhật thất bại. Cột không hợp lệ hoặc dữ liệu không tồn tại.");
+        }
     }
 }

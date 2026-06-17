@@ -4,7 +4,9 @@ import model.data.AccountDao;
 import model.data.TransactionDao;
 import model.data.UserDao;
 import model.entity.*;
+import model.entity.enums.AccountStatus;
 import model.pattern.factory.AccountFactory;
+import model.pattern.observer.AccountStatusLogger;
 import model.entity.enums.TransactionType;
 import java.time.LocalDateTime;
 
@@ -20,6 +22,10 @@ public class AccountService {
     public List<Account> getAllAccount(int idCustomer) {
         return accountDao.getAllAccountOfCustomerDao(idCustomer);
 
+    }
+
+    public List<Account> getAllAccountsInSystem() {
+        return accountDao.getAllAccounts();
     }
 
     public Customer getCustomerbyId(int idCus){
@@ -121,4 +127,25 @@ public class AccountService {
         return transactionDao.getTransactionsByAccountId(accountId);
     }
 
+    public Account getAccountById(int idAccount){
+        Account account = accountDao.getAccountById(idAccount);
+        if(account == null){
+            throw new RuntimeException("Lỗi không tìm thấy tài khoản");
+        }
+        return account;
+    }
+
+    public void changeAccountStatus(int accountId, AccountStatus newStatus, String reason) {
+        Account account = getAccountById(accountId);
+
+        // Đăng kí observer để ghi log
+        AccountStatusLogger logger = new AccountStatusLogger();
+        account.addObserver(logger);
+
+        // Đổi trạng thái (bên trong sẽ tự động notify observer)
+        account.changeState(newStatus, reason);
+
+        // Lưu dữ liệu (Update database)
+        accountDao.updateStatus(account.getAccountId(), newStatus);
+    }
 }

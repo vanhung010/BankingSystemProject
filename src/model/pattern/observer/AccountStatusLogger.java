@@ -25,5 +25,6 @@ public class AccountStatusLogger implements AccountStatusObserver {
             System.out.println("📝 Lý do         : " + reason);
             System.out.println("=".repeat(60) + "\n");
         }
+
     }
 }

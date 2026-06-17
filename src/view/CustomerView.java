@@ -81,7 +81,7 @@ public class CustomerView {
                     handleViewTransactionHistory(); //Bảo
                     break;
                 case "11":
-//                    handleViewAccountDetails(); Băng
+                 handleViewAccountDetails();
                     break;
                 case "0":
                     System.out.println("Đã đăng xuất!");
@@ -90,6 +90,60 @@ public class CustomerView {
                     System.out.println("Lựa chọn không hợp lệ!");
             }
         }
+    }
+
+    public void handleViewAccountDetails() {
+
+        checkAllAccount(customer.getUserId());
+
+        System.out.print("Nhập ID tài khoản muốn tra cứu chi tiết: ");
+        String input = scanner.nextLine();
+
+
+        // 2. Lấy thông tin tài khoản qua DB
+        Account account = customerController.getAccountById(input);
+
+        // Validate: Đảm bảo tài khoản tồn tại và thuộc về khách hàng đang đăng nhập
+        if (account == null || account.getOwner().getUserId() != customer.getUserId()) {
+            System.out.println("❌ Không tìm thấy tài khoản hoặc bạn không có quyền truy cập!");
+            return;
+        }
+
+        System.out.println("\n================ CHI TIẾT TÀI KHOẢN ================");
+        System.out.printf("ID Tài khoản   : %d\n", account.getAccountId());
+        System.out.printf("Chủ tài khoản  : %s\n", account.getOwner().getFullName());
+        System.out.printf("Số dư          : %.2f VNĐ\n", account.getBalance());
+        System.out.printf("Ngày tạo       : %s\n", account.getCreatedAt());
+        System.out.printf("Trạng thái     : %s\n", account.getAccountStatus());
+
+        // 3. Hiển thị chi tiết theo từng loại tài khoản xác định
+        if (account instanceof CheckingAccount) {
+            System.out.println("Loại tài khoản : Thanh toán (Checking)");
+            System.out.println("Mô tả          : Tài khoản dùng để giao dịch, rút, nạp và chuyển tiền linh hoạt.");
+
+        } else if (account instanceof SavingAccount) {
+            SavingAccount savingAcc = (SavingAccount) account;
+            System.out.println("Loại tài khoản : Tiết kiệm (Saving)");
+            System.out.printf("Kỳ hạn         : %d tháng\n", savingAcc.getTerm());
+            System.out.printf("Lãi suất       : %.2f%%\n", savingAcc.getInterest());
+            System.out.printf("Ngày gửi       : %s\n", savingAcc.getDepositDate());
+            System.out.printf("Ngày đáo hạn   : %s\n", savingAcc.getMaturityDate());
+            System.out.printf("Tiền lãi dự tính: %.2f VNĐ\n", savingAcc.calcInterestAmount());
+
+        } else if (account instanceof LoanAccount) {
+            LoanAccount loanAcc = (LoanAccount) account;
+            System.out.println("Loại tài khoản : Khoản vay (Loan)");
+            System.out.printf("Dư nợ gốc      : %.2f VNĐ\n", loanAcc.getPricipalAmount());
+            System.out.printf("Lãi suất vay   : %.2f%%\n", loanAcc.getInterestRate());
+            System.out.printf("Kỳ hạn vay     : %d tháng\n", loanAcc.getLoanTerm());
+            System.out.printf("Số tiền trả/tháng: %.2f VNĐ\n", loanAcc.getMonthlyRequiredPayment());
+            System.out.printf("Tiền đã trả    : %.2f VNĐ\n", loanAcc.getAmountPaidThisMonth());
+            System.out.printf("Ngày trả tiếp  : %s\n", loanAcc.getNextPaymentDate());
+        } else {
+            System.out.println("Loại tài khoản : Không xác định (Unknown)");
+        }
+        System.out.println("====================================================");
+
     }
 
     private void handlePaymentLoan() {

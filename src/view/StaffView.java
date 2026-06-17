@@ -60,7 +60,7 @@ public class StaffView {
                      handleSearchCustomer();
                      break;
                  case "2":
- //                    changeAccountStatus(); //Băng
+                     changeAccountStatus();
                      break;
                  case "3":
                      showAllLoanRequestPending();
@@ -72,7 +72,7 @@ public class StaffView {
                      handleViewBankConfig();
                      break;
                 case "6":
-//                    handleUpdateBankSettings(); Baăng
+                    handleUpdateBankSettings();
                     break;
                 case "7":
                     handleUpdateTime();
@@ -91,6 +91,94 @@ public class StaffView {
             }
         }
     }
+
+
+    private void changeAccountStatus() {
+        System.out.println("\n--- THAY ĐỔI TRẠNG THÁI TÀI KHOẢN ---");
+        staffController.showAllAccountsInSystem();
+
+        System.out.print("Nhập ID tài khoản cần thay đổi: ");
+        String accountIdStr = scanner.nextLine();
+
+        System.out.println("Chọn trạng thái mới:");
+        System.out.println("1. Khóa (LOCKED)");
+        System.out.println("2. Mở (ACTIVE)");
+        System.out.println("3. Đóng (CLOSED)");
+        System.out.print("Chọn: ");
+        String statusChoice = scanner.nextLine();
+        String newStatusStr = "";
+        if (statusChoice.equals("1")) newStatusStr = "LOCKED";
+        else if (statusChoice.equals("2")) newStatusStr = "ACTIVE";
+        else if (statusChoice.equals("3")) newStatusStr = "CLOSED";
+        else {
+            System.out.println("Lựa chọn trạng thái không hợp lệ.");
+            return;
+        }
+
+        System.out.print("Nhập lý do thay đổi: ");
+        String reason = scanner.nextLine();
+
+        staffController.changeAccountStatus(accountIdStr, newStatusStr, reason);
+    }
+
+    public void handleUpdateBankSettings() {
+        while (true) {
+            System.out.println("\n=======================================================");
+            System.out.println("             CẬP NHẬT CẤU HÌNH NGÂN HÀNG               ");
+            System.out.println("=======================================================");
+            System.out.println("1. Cập nhật số tiền khởi tạo tối thiểu (Checking)");
+            System.out.println("2. Cập nhật số tiền gửi tiết kiệm tối thiểu");
+            System.out.println("3. Cập nhật lãi suất vay cơ sở");
+            System.out.println("4. Cập nhật lãi suất tiền gửi không kỳ hạn");
+            System.out.println("5. Cập nhật lãi suất tiết kiệm 1 Tháng");
+            System.out.println("6. Cập nhật lãi suất tiết kiệm 6 Tháng");
+            System.out.println("7. Cập nhật lãi suất tiết kiệm 12 Tháng");
+            System.out.println("0. Kết thúc và dời đi");
+            System.out.println("-------------------------------------------------------");
+            System.out.print("Nhập lựa chọn của bạn: ");
+            String choice = scanner.nextLine();
+
+            if (choice.equals("0")) {
+                System.out.println("Đã kết thúc quá trình cập nhật cấu hình.");
+                break;
+            }
+
+            System.out.print("Nhập giá trị mới cần cập nhật (Nhập số thập phân, vd: 0.05 cho 5% hoặc 50000 cho VNĐ): ");
+            String valueStr = scanner.nextLine();
+
+
+            boolean isSuccess = false;
+            switch (choice) {
+                case "1":
+                    System.out.println(staffController.updateConfigValue("min_checking_balance", valueStr));
+                    break;
+                case "2":
+                    System.out.println(staffController.updateConfigValue("min_saving_deposit", valueStr));
+                    break;
+                case "3":
+                    System.out.println(staffController.updateConfigValue("base_loan_interest_rate", valueStr));
+                    break;
+                case "4":
+                    System.out.println(staffController.updateConfigValue("demand_interest_rate", valueStr));
+                    break;
+                case "5":
+                    System.out.println(staffController.updateConfigValue("interest_rate_1M", valueStr));
+                    break;
+                case "6":
+                    System.out.println(staffController.updateConfigValue("interest_rate_6M", valueStr));
+                    break;
+                case "7":
+                    System.out.println(staffController.updateConfigValue("interest_rate_12M", valueStr));
+                    break;
+                default:
+                    System.out.println("❌ Lựa chọn không hợp lệ!");
+                    continue; // Bỏ qua cập nhật nếu chọn sai
+            }
+
+            System.out.println(staffController.viewBankConfig());
+        }
+    }
+
 
     private void handleUpdateTime() {
         staffController.handleUpdateTime();

@@ -124,6 +124,10 @@ public class AccountDao {
         return savingAccountList;
     }
 
+    public List<Account> getAllAccounts() {
+        return dataCenter.getAccountList();
+    }
+
     public void updateDateSavingAccount(SavingAccount savingAccount) {
         for (Account account : dataCenter.getAccountList()) {
             if (account instanceof SavingAccount && account.getAccountId() == savingAccount.getAccountId()) {

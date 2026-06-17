@@ -103,4 +103,25 @@ public class CustomerController {
             return "❌ Giao dịch thất bại: " + e.getMessage();
         }
     }
+
+    public Account getAccountById(String idAccontString){
+        int idAccount = 0;
+        try {
+            idAccount = ParseNumber.parseint(idAccontString);
+        }
+        catch (RuntimeException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+        try {
+            Account account = accountService.getAccountById(idAccount);
+            return account;
+        }
+        catch (RuntimeException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+
+    }
+
 }

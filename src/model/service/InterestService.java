@@ -21,7 +21,8 @@ public class InterestService {
         for(LoanAccount loanAccount: loanAccountList){
             double interestLoan = systemDao.getInterestLoan();
             //số tiên lãi phải trả trong tháng của tài khoản vay
-            double interestLoanAccountInMonth = loanAccount.getInterestStrategy().calcInterest(loanAccount.getBalance(), interestLoan, loanAccount.getLoanTerm());
+            // calculate monthly interest (use time=1 month)
+            double interestLoanAccountInMonth = loanAccount.getInterestStrategy().calcInterest(loanAccount.getBalance(), interestLoan, 1);
             //số tiền nợ ban đầu
             double balanceBefore = loanAccount.getBalance();
             //thực hiện cộng tiền

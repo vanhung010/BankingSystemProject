@@ -3,6 +3,7 @@ package model.data;
 import model.entity.Customer;
 import model.entity.User;
 import model.entity.enums.Role;
+import java.util.List;
 
 public class UserDao {
 
@@ -39,20 +40,24 @@ public class UserDao {
     }
 
     public boolean registerUser(Customer customer) {
-        if(checkEmailDuplicate(customer.getEmail())){
-            throw new RuntimeException("Trùng email");
-        }
+         if(checkEmailDuplicate(customer.getEmail())){
+             throw new RuntimeException("Trùng email");
+         }
 
-        int maxId = 0;
-        for (User u : dataCenter.getUserList()) {
-            if (u.getUserId() > maxId) {
-                maxId = u.getUserId();
-            }
-        }
+         int maxId = 0;
+         for (User u : dataCenter.getUserList()) {
+             if (u.getUserId() > maxId) {
+                 maxId = u.getUserId();
+             }
+         }
 
-        customer.setUserId(maxId + 1);
-        customer.setRole(Role.CUSTOMER);
+         customer.setUserId(maxId + 1);
+         customer.setRole(Role.CUSTOMER);
 
-        return dataCenter.getUserList().add(customer);
-    }
+         return dataCenter.getUserList().add(customer);
+     }
+
+     public List<User> getAllCustomers() {
+         return dataCenter.getUserList();
+     }
 }

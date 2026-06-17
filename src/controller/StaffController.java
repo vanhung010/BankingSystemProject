@@ -17,6 +17,7 @@ public class StaffController {
     private LoanService loanService = new LoanService();
     private SystemService systemService = new SystemService();
     private TimeService timeService = new TimeService();
+    private UserService customerSearchService = new UserService();
 
     public StaffController() {
         // Đăng ký Observer 1 lần khi khởi tạo
@@ -79,6 +80,44 @@ public class StaffController {
     }
 
     public LocalDate getSystemTime() {
-        return timeService.getSystemDate();
-    }
-}
+         return timeService.getSystemDate();
+     }
+
+     // --- Customer Search Methods ---
+     public String searchCustomerById(int customerId) {
+         return customerSearchService.searchCustomerById(customerId);
+     }
+
+     public String searchCustomerByUsername(String username) {
+         return customerSearchService.searchCustomerByUsername(username);
+     }
+
+     public String searchCustomerByEmail(String email) {
+         return customerSearchService.searchCustomerByEmail(email);
+     }
+
+     public String searchCustomerByFullName(String fullName) {
+         return customerSearchService.searchCustomerByFullName(fullName);
+     }
+
+     public String viewAllCustomers() {
+         return customerSearchService.viewAllCustomers();
+     }
+
+      // --- Bank / System Methods ---
+      public String viewBankConfig() {
+          return systemService.viewBankConfig();
+      }
+
+      public String viewInterestRates() {
+          return systemService.viewInterestRates();
+      }
+
+      public String viewAccountRequirements() {
+          return systemService.viewAccountRequirements();
+      }
+
+      public String viewSystemDate() {
+          return systemService.viewSystemDate();
+      }
+ }

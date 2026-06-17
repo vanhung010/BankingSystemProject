@@ -56,21 +56,21 @@ public class StaffView {
             String choice = scanner.nextLine();
 
             switch (choice){
-                case "1":
-//                    showInformationCutomer();    //Minh anh
-                    break;
-                case "2":
-//                    changeAccountStatus(); //Băng
-                    break;
-                case "3":
-                    showAllLoanRequestPending();
-                    break;
-                case "4":
-                    handleLoanRequest();
-                    break;
-                case "5":
-//                    displayBankSettings(); Minh anh
-                    break;
+                 case "1":
+                     handleSearchCustomer();
+                     break;
+                 case "2":
+ //                    changeAccountStatus(); //Băng
+                     break;
+                 case "3":
+                     showAllLoanRequestPending();
+                     break;
+                 case "4":
+                     handleLoanRequest();
+                     break;
+                 case "5":
+                     handleViewBankConfig();
+                     break;
                 case "6":
 //                    handleUpdateBankSettings(); Baăng
                     break;
@@ -202,9 +202,94 @@ public class StaffView {
             System.out.println("===============================================================================");
         }
         catch(RuntimeException e){
-            System.out.println(e.getMessage());
-            return;
-        }
-    }
+             System.out.println(e.getMessage());
+             return;
+         }
+     }
 
-}
+     private void handleSearchCustomer() {
+         System.out.println("\n--- TÌM KIẾM THÔNG TIN KHÁCH HÀNG ---");
+         System.out.println("1. Tìm theo ID khách hàng");
+         System.out.println("2. Tìm theo tên đăng nhập");
+         System.out.println("3. Tìm theo email");
+         System.out.println("4. Tìm theo tên đầy đủ");
+         System.out.println("5. Xem danh sách tất cả khách hàng");
+         System.out.println("0. Quay lại");
+         System.out.print("Chọn: ");
+         String choice = scanner.nextLine();
+
+         switch (choice) {
+             case "1":
+                 System.out.print("Nhập ID khách hàng: ");
+                 try {
+                     int id = Integer.parseInt(scanner.nextLine());
+                     String result = staffController.searchCustomerById(id);
+                     System.out.println(result);
+                 } catch (NumberFormatException e) {
+                     System.out.println("❌ Lỗi: ID phải là một số!");
+                 }
+                 break;
+             case "2":
+                 System.out.print("Nhập tên đăng nhập: ");
+                 String username = scanner.nextLine();
+                 String result = staffController.searchCustomerByUsername(username);
+                 System.out.println(result);
+                 break;
+             case "3":
+                 System.out.print("Nhập email: ");
+                 String email = scanner.nextLine();
+                 result = staffController.searchCustomerByEmail(email);
+                 System.out.println(result);
+                 break;
+             case "4":
+                 System.out.print("Nhập tên đầy đủ: ");
+                 String fullName = scanner.nextLine();
+                 result = staffController.searchCustomerByFullName(fullName);
+                 System.out.println(result);
+                 break;
+             case "5":
+                 result = staffController.viewAllCustomers();
+                 System.out.println(result);
+                 break;
+             case "0":
+                 break;
+             default:
+                 System.out.println("❌ Lựa chọn không hợp lệ!");
+         }
+     }
+
+     private void handleViewBankConfig() {
+         System.out.println("\n--- CẤU HÌNH & LÃI SUẤT NGÂN HÀNG ---");
+         System.out.println("1. Xem tất cả cấu hình");
+         System.out.println("2. Xem bảng lãi suất");
+         System.out.println("3. Xem yêu cầu tối thiểu");
+         System.out.println("4. Xem ngày hệ thống");
+         System.out.println("0. Quay lại");
+         System.out.print("Chọn: ");
+         String choice = scanner.nextLine();
+
+         String result = "";
+         switch (choice) {
+             case "1":
+                 result = staffController.viewBankConfig();
+                 break;
+             case "2":
+                 result = staffController.viewInterestRates();
+                 break;
+             case "3":
+                 result = staffController.viewAccountRequirements();
+                 break;
+             case "4":
+                 result = staffController.viewSystemDate();
+                 break;
+             case "0":
+                 break;
+             default:
+                 result = "❌ Lựa chọn không hợp lệ!";
+         }
+
+         if (!result.isEmpty()) {
+             System.out.println(result);
+         }
+     }
+ }

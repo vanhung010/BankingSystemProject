@@ -3,10 +3,7 @@ package controller;
 import model.entity.Account;
 import model.entity.Customer;
 import model.entity.Transaction;
-import model.service.AccountService;
-import model.service.LoanService;
-import model.service.TimeService;
-import model.service.TransactionService;
+import model.service.*;
 import util.ParseNumber;
 import java.util.Scanner;
 
@@ -20,6 +17,9 @@ public class CustomerController {
     private TimeService timeService = new TimeService();
     private Scanner scanner = new Scanner(System.in);
     private TransactionService transactionService = new TransactionService();
+    private SavingService savingService = new SavingService();
+
+    // ...existing code...
 
 
 
@@ -68,22 +68,30 @@ public class CustomerController {
     }
 
     public String transfer(String amountString, String idAccountSourceString, String idAccountTargetString, String description) {
-        int idAccountSource = 0;
-        int idAccountTarget = 0;
-        double amount = 0;
-        //đổi kiểu dữ liệu
-        try {
-            idAccountSource = ParseNumber.parseint(idAccountSourceString);
-            idAccountTarget = ParseNumber.parseint(idAccountTargetString);
-            amount = ParseNumber.parseDouble(amountString);
-        } catch (RuntimeException e) {
-            return e.getMessage();
-        }
-        try {
-            transactionService.tranfer(amount, idAccountSource, idAccountTarget, description);
-        } catch (RuntimeException e) {
-            return e.getMessage();
-        }
-        return "Thông báo: Chuyển khoản thành công!";
-    }
-}
+         int idAccountSource = 0;
+         int idAccountTarget = 0;
+         double amount = 0;
+         //đổi kiểu dữ liệu
+         try {
+             idAccountSource = ParseNumber.parseint(idAccountSourceString);
+             idAccountTarget = ParseNumber.parseint(idAccountTargetString);
+             amount = ParseNumber.parseDouble(amountString);
+         } catch (RuntimeException e) {
+             return e.getMessage();
+         }
+         try {
+             transactionService.tranfer(amount, idAccountSource, idAccountTarget, description);
+         } catch (RuntimeException e) {
+             return e.getMessage();
+         }
+         return "Thông báo: Chuyển khoản thành công!";
+     }
+
+      public String closeSavingAccount(int accountId) {
+          return savingService.closeSavingAccount(accountId);
+      }
+
+      public String viewClosableSavingAccounts(int customerId) {
+          return savingService.getClosableSavingAccounts(customerId);
+      }
+ }

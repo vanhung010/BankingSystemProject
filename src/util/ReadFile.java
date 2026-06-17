@@ -12,7 +12,6 @@ import model.entity.enums.AccountStatus;
 import model.entity.enums.TransactionType;
 import model.entity.enums.LoanRequestStatus;
 import model.pattern.strategy.DemandInterestStrategy;
-import model.pattern.strategy.LoanInterestStrategy;
 import model.pattern.strategy.TermInterestStrategy;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -96,7 +95,8 @@ public class ReadFile {
                 la.setLoanTerm(Integer.parseInt(parts[10]));
                 la.setAmountPaidThisMonth(Double.parseDouble(parts[11]));
                 la.setMonthlyRequiredPayment(Double.parseDouble(parts[12]));
-                la.setInterestStrategy(new LoanInterestStrategy());
+                // Use TermInterestStrategy for loan accounts as well (simplified)
+                la.setInterestStrategy(new TermInterestStrategy());
                 account = la;
             }
 

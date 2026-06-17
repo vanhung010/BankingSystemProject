@@ -91,11 +91,8 @@ public class SavingService {
             // Cập nhật số dư tài khoản
             account.setBalance(amountToReceive);
             
-            // 📌 ĐĂNG KÝ OBSERVER (AccountStatusLogger) TRƯỚC KHI THAY ĐỔI TRẠNG THÁI
-            // Khi changeState() được gọi, nó sẽ notify observer này
+
             account.addObserver(new AccountStatusLogger());
-            
-            // Cập nhật trạng thái tài khoản → Observer sẽ được NOTIFY
             account.changeState(AccountStatus.CLOSED, "Tất toán sổ tiết kiệm");
 
             // Cập nhật database

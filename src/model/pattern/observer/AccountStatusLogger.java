@@ -1,12 +1,17 @@
 package model.pattern.observer;
 
 import model.entity.Account;
+import model.entity.LoanAccount;
 import model.entity.enums.AccountStatus;
 
 public class AccountStatusLogger implements AccountStatusObserver {
     @Override
     public void onStatusChanged(Account account, AccountStatus oldStatus,
                                 AccountStatus newStatus, String reason) {
+
+        if(account instanceof LoanAccount && newStatus == AccountStatus.CLOSED){
+            System.out.println("Chúc mừng! Khách hàng đã hoàn tất khoản vay này");
+        }
             System.out.println("\n" + "=".repeat(60));
             System.out.println("📋 SỰ KIỆN: THAY ĐỔI TRẠNG THÁI TÀI KHOẢN");
             System.out.println("=".repeat(60));

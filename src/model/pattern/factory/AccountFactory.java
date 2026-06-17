@@ -4,7 +4,6 @@ import model.data.DataCenter;
 import model.entity.*;
 import model.entity.enums.AccountStatus;
 import model.pattern.observer.AccountStatusLogger;
-import model.pattern.strategy.LoanInterestStrategy;
 import model.pattern.strategy.TermInterestStrategy;
 
 import java.time.LocalDate;
@@ -27,7 +26,8 @@ public class AccountFactory {
         loanAccount.setNextPaymentDate(LocalDate.now().plusMonths(1));
         loanAccount.setLoanTerm(loanTerm);
         loanAccount.setAmountPaidThisMonth(0);
-        loanAccount.setInterestStrategy(new LoanInterestStrategy());
+        // Use TermInterestStrategy for loan interest calculation (monthly calculation will be handled by caller)
+        loanAccount.setInterestStrategy(new TermInterestStrategy());
         loanAccount.setMonthlyRequiredPayment(balance / loanTerm);
 
         loanAccount.addObserver(new AccountStatusLogger());

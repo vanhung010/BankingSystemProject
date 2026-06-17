@@ -17,8 +17,7 @@ public class StaffController {
     private LoanService loanService = new LoanService();
     private SystemService systemService = new SystemService();
     private TimeService timeService = new TimeService();
-    private CustomerSearchService customerSearchService = CustomerSearchService.getInstance();
-    private BankConfigService bankConfigService = BankConfigService.getInstance();
+    private UserService customerSearchService = new UserService();
 
     public StaffController() {
         // Đăng ký Observer 1 lần khi khởi tạo
@@ -105,20 +104,20 @@ public class StaffController {
          return customerSearchService.viewAllCustomers();
      }
 
-     // --- Bank Config Methods ---
-     public String viewBankConfig() {
-         return bankConfigService.viewBankConfig();
-     }
+      // --- Bank / System Methods ---
+      public String viewBankConfig() {
+          return systemService.viewBankConfig();
+      }
 
-     public String viewInterestRates() {
-         return bankConfigService.viewInterestRates();
-     }
+      public String viewInterestRates() {
+          return systemService.viewInterestRates();
+      }
 
-     public String viewAccountRequirements() {
-         return bankConfigService.viewAccountRequirements();
-     }
+      public String viewAccountRequirements() {
+          return systemService.viewAccountRequirements();
+      }
 
-     public String viewSystemDate() {
-         return bankConfigService.viewSystemDate();
-     }
+      public String viewSystemDate() {
+          return systemService.viewSystemDate();
+      }
  }

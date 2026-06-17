@@ -8,28 +8,16 @@ import model.entity.User;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Singleton Service để tìm kiếm và xem thông tin khách hàng
- * Chỉ Staff có thể sử dụng chức năng này
- */
-public class CustomerSearchService {
-    private static CustomerSearchService instance;
+
+public class UserService {
     private UserDao userDao;
 
-    private CustomerSearchService() {
+    // public constructor (no singleton) — DAOs already handle shared state if needed
+    public UserService() {
         this.userDao = new UserDao();
     }
 
-    public static CustomerSearchService getInstance() {
-        if (instance == null) {
-            instance = new CustomerSearchService();
-        }
-        return instance;
-    }
 
-    /**
-     * Tìm khách hàng theo ID
-     */
     public String searchCustomerById(int customerId) {
         try {
             Customer customer = userDao.getCustomerById(customerId);
@@ -42,9 +30,6 @@ public class CustomerSearchService {
         }
     }
 
-    /**
-     * Tìm khách hàng theo tên đăng nhập
-     */
     public String searchCustomerByUsername(String username) {
         try {
             if (username == null || username.trim().isEmpty()) {
@@ -69,9 +54,6 @@ public class CustomerSearchService {
         }
     }
 
-    /**
-     * Tìm khách hàng theo email
-     */
     public String searchCustomerByEmail(String email) {
         try {
             if (email == null || email.trim().isEmpty()) {
@@ -96,9 +78,6 @@ public class CustomerSearchService {
         }
     }
 
-    /**
-     * Tìm khách hàng theo tên đầy đủ
-     */
     public String searchCustomerByFullName(String fullName) {
         try {
             if (fullName == null || fullName.trim().isEmpty()) {
@@ -107,7 +86,7 @@ public class CustomerSearchService {
 
             List<Customer> foundCustomers = new ArrayList<>();
             for (User user : userDao.getAllCustomers()) {
-                if (user instanceof Customer && 
+                if (user instanceof Customer &&
                     user.getFullName().toLowerCase().contains(fullName.toLowerCase())) {
                     foundCustomers.add((Customer) user);
                 }
@@ -127,9 +106,6 @@ public class CustomerSearchService {
         }
     }
 
-    /**
-     * Xem danh sách tất cả khách hàng
-     */
     public String viewAllCustomers() {
         try {
             List<Customer> customers = new ArrayList<>();
@@ -149,9 +125,6 @@ public class CustomerSearchService {
         }
     }
 
-    /**
-     * Định dạng thông tin 1 khách hàng
-     */
     private String formatCustomerInfo(Customer customer) {
         StringBuilder result = new StringBuilder();
         result.append("\n============================================================\n");
@@ -163,7 +136,6 @@ public class CustomerSearchService {
         result.append("Email            : ").append(customer.getEmail()).append("\n");
         result.append("Thu nhập hàng tháng: ").append(String.format("%.2f VNĐ", customer.getMonthlyIncome())).append("\n");
 
-        // Hiển thị danh sách tài khoản
         List<Account> accounts = customer.getAccountList();
         if (accounts != null && !accounts.isEmpty()) {
             result.append("---------------------------------------------------------\n");
@@ -190,9 +162,6 @@ public class CustomerSearchService {
         return result.toString();
     }
 
-    /**
-     * Định dạng danh sách khách hàng
-     */
     private String formatCustomerListInfo(List<Customer> customers) {
         StringBuilder result = new StringBuilder();
         result.append("\n============================================================\n");

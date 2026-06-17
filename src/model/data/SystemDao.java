@@ -29,4 +29,8 @@ public class SystemDao {
     public double getInterestLoan() {
         return dataCenter.getBankingSystem().getBaseLoanInterestRate();
     }
+
+    public double getDemandInterestRate() {
+        return dataCenter.getBankingSystem().getDemandInterestRate();
+    }
 }

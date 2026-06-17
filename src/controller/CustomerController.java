@@ -17,7 +17,7 @@ public class CustomerController {
     private TimeService timeService = new TimeService();
     private Scanner scanner = new Scanner(System.in);
     private TransactionService transactionService = new TransactionService();
-    private SavingClosureService savingClosureService = SavingClosureService.getInstance();
+    private SavingService savingService = new SavingService();
 
     // ...existing code...
 
@@ -87,11 +87,11 @@ public class CustomerController {
          return "Thông báo: Chuyển khoản thành công!";
      }
 
-     public String closeSavingAccount(int accountId) {
-         return savingClosureService.closeSavingAccount(accountId);
-     }
+      public String closeSavingAccount(int accountId) {
+          return savingService.closeSavingAccount(accountId);
+      }
 
-     public String viewClosableSavingAccounts(int customerId) {
-         return savingClosureService.getClosableSavingAccounts(customerId);
-     }
+      public String viewClosableSavingAccounts(int customerId) {
+          return savingService.getClosableSavingAccounts(customerId);
+      }
  }

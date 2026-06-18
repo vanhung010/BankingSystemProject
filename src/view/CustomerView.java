@@ -54,19 +54,19 @@ public class CustomerView {
                     getAllAccount(customer.getUserId());
                     break;
                 case "2":
-                    handleOpenCheckingAccount(); //BẢO
+                    handleOpenCheckingAccount();
                     break;
                 case "3":
-                    handleOpenSavingAccount();   //Bảo
+                    handleOpenSavingAccount();
                     break;
                 case "4":
                     handleLoanRequest();
                     break;
                 case "5":
-//                    hanldeDeposite(); //Đức An
+                   hanldeDeposite();
                     break;
                 case "6":
-//                    handleWithdraw(); Đức An
+                   handleWithdraw();
                     break;
                 case "7":
                    handleTransfer();
@@ -90,6 +90,35 @@ public class CustomerView {
                     System.out.println("Lựa chọn không hợp lệ!");
             }
         }
+    }
+
+    private void handleWithdraw(){
+        checkAllAccount(customer.getUserId());
+
+        System.out.println("Nhập id tài khoản thanh toán muốn rút tiền.");
+        String idAccountString = scanner.nextLine();
+        Integer idAccountInt = -1;
+        System.out.println("Nhập số tiền muốn rút");
+        String amountString = scanner.nextLine();
+        double amountDouble = -1;
+
+        String mess = customerController.withdraw(customer, idAccountString, amountString);
+
+        System.out.println(mess);
+    }
+
+    private void hanldeDeposite() {
+        checkAllAccount(customer.getUserId());
+
+        System.out.println("Nhập id tài khoản thanh toán muốn nạp tiền.");
+        String idAccountString = scanner.nextLine();
+        System.out.println("Nhập số tiền muốn nạp");
+        String amountString = scanner.nextLine();
+
+        String mess = customerController.deposite(customer, idAccountString, amountString);
+
+        System.out.println(mess);
+
     }
 
     public void handleViewAccountDetails() {

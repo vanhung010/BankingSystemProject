@@ -124,4 +124,39 @@ public class CustomerController {
 
     }
 
+    public String deposite(Customer customer, String accountIdString, String amountString) {
+        String mess = "Thông báo: Nạp tiền thành công!";
+        int accountId = 0;
+        double amount = 0;
+        try {
+            accountId = ParseNumber.parseint(accountIdString);
+            amount = ParseNumber.parseDouble(amountString);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+        try {
+            transactionService.depositCheckingAccount(customer.getUserId(), accountId, amount);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+        return mess;
+    }
+
+    public String withdraw(Customer customer, String accountIdString, String amountString) {
+        String mess = "Thông báo: Rút tiền thành công!";
+        int accountId = 0;
+        double amount = 0;
+        try {
+            accountId = ParseNumber.parseint(accountIdString);
+            amount = ParseNumber.parseDouble(amountString);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+        try {
+            transactionService.withdrawCheckingAccount(customer.getUserId(), accountId, amount);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+        return mess;
+    }
 }
